@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hefi Chat 3D Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3f37c9;
+      --accent: #4895ef;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --success: #4cc9f0;
+      --me-message: linear-gradient(135deg, #4361ee, #3f37c9);
+      --other-message: linear-gradient(135deg, #f72585, #b5179e);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      color: white;
+      min-height: 100vh;
+      perspective: 1000px;
+      overflow-x: hidden;
+    }
+    
+    /* حجم التطبيق الكبير */
+    .app-container {
+      max-width: 1200px;
+      min-width: 900px;
+      margin: 0 auto;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Floating particles background */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 50%;
+      animation: floatParticle linear infinite;
+    }
+    
+    @keyframes floatParticle {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    
+    /* Login Screen */
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 2rem;
+      transform-style: preserve-3d;
+      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    .login-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 3rem; /* زيادة الحشوة */
+      width: 100%;
+      max-width: 500px; /* زيادة العرض */
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transform-style: preserve-3d;
+      animation: fadeIn 0.8s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) rotateX(30deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+      }
+    }
+    
+    .app-title {
+      font-size: 3rem; /* زيادة حجم الخط */
+      font-weight: 600;
+      margin-bottom: 2rem; /* زيادة المسافة */
+      text-align: center;
+      background: linear-gradient(to right, #f72585, #4361ee, #4cc9f0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      position: relative;
+    }
+    
+    .app-title::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70px;
+      height: 4px;
+      background: linear-gradient(to right, #f72585, #4361ee);
+      border-radius: 3px;
+    }
+    
+    .input-group {
+      margin-bottom: 2rem; /* زيادة المسافة */
+      position: relative;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 18px 25px; /* زيادة الحشوة */
+      font-size: 1.2rem; /* زيادة حجم الخط */
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 12px; /* زيادة نصف القطر */
+      color: white;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(72, 149, 239, 0.3); /* زيادة الظل */
+      transform: translateY(-3px);
+    }
+    
+    .input-group label {
+      position: absolute;
+      left: 25px;
+      top: 18px;
+      font-size: 1.2rem; /* زيادة حجم الخط */
+      color: rgba(255, 255, 255, 0.7);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      top: -12px;
+      left: 15px;
+      font-size: 1rem;
+      background: #16213e;
+      padding: 0 8px;
+      color: var(--accent);
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 18px;
+      font-size: 1.2rem; /* زيادة حجم الخط */
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(to right, #f72585, #b5179e);
+      color: white;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(247, 37, 133, 0.3); /* زيادة الظل */
+    }
+    
+    .btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(247, 37, 133, 0.4);
+    }
+    
+    .btn:active {
+      transform: translateY(2px);
+    }
+    
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, #b5179e, #f72585);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .btn:hover::after {
+      opacity: 1;
+    }
+    
+    /* Chat Screen */
+    .chat-container {
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+      padding: 1.5rem; /* زيادة الحشوة */
+      max-width: 1400px; /* زيادة العرض الأقصى */
+      margin: 0 auto;
+      transform-style: preserve-3d;
+    }
+    
+    .chat-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.5rem; /* زيادة الحشوة */
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 18px; /* زيادة نصف القطر */
+      margin-bottom: 1.5rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* زيادة الظل */
+      transform: translateZ(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .chat-title {
+      font-size: 2rem; /* زيادة حجم الخط */
+      font-weight: 500;
+      background: linear-gradient(to right, #4cc9f0, #4361ee);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .chat-box {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border-radius: 18px;
+      padding: 2rem; /* زيادة الحشوة */
+      overflow-y: auto;
+      margin-bottom: 1.5rem;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2); /* زيادة الظل الداخلي */
+      transform-style: preserve-3d;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .message {
+      margin-bottom: 1.5rem;
+      padding: 15px 20px; /* زيادة الحشوة */
+      border-radius: 18px;
+      max-width: 75%; /* زيادة العرض الأقصى */
+      position: relative;
+      transform-style: preserve-3d;
+      animation: messageIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      opacity: 0;
+      transform: translateY(25px) rotateX(30deg); /* زيادة الحركة */
+    }
+    
+    @keyframes messageIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+      }
+    }
+    
+    .me {
+      align-self: flex-end;
+      background: var(--me-message);
+      color: white;
+      border-top-right-radius: 8px;
+      box-shadow: -6px 6px 20px rgba(67, 97, 238, 0.3); /* زيادة الظل */
+    }
+    
+    .other {
+      align-self: flex-start;
+      background: var(--other-message);
+      color: white;
+      border-top-left-radius: 8px;
+      box-shadow: 6px 6px 20px rgba(247, 37, 133, 0.3); /* زيادة الظل */
+    }
+    
+    .message-sender {
+      font-weight: 500;
+      font-size: 1rem; /* زيادة حجم الخط */
+      margin-bottom: 8px; /* زيادة المسافة */
+      display: block;
+    }
+    
+    .message-time {
+      font-size: 0.9rem; /* زيادة حجم الخط */
+      opacity: 0.8;
+      text-align: right;
+      margin-top: 8px; /* زيادة المسافة */
+      display: block;
+    }
+    
+    .message-image {
+      max-width: 100%;
+      max-height: 400px; /* زيادة الارتفاع الأقصى */
+      border-radius: 12px;
+      margin-top: 10px; /* زيادة المسافة */
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2); /* زيادة الظل */
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .message-image:hover {
+      transform: scale(1.03) translateZ(10px);
+    }
+    
+    .message-input-container {
+      display: flex;
+      gap: 1.5rem; /* زيادة المسافة */
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1.5rem; /* زيادة الحشوة */
+      border-radius: 18px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2); /* زيادة الظل */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      align-items: center;
+    }
+    
+    .message-input {
+      flex: 1;
+      padding: 15px 25px; /* زيادة الحشوة */
+      font-size: 1.2rem; /* زيادة حجم الخط */
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .message-input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 0 4px rgba(72, 149, 239, 0.3);
+    }
+    
+    /* زر الإرفاق */
+    .attach-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0 20px; /* زيادة الحشوة */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .attach-btn:hover {
+      color: var(--accent);
+      transform: translateY(-3px) rotate(-15deg); /* زيادة الحركة */
+    }
+    
+    .attach-btn svg {
+      width: 28px; /* زيادة الحجم */
+      height: 28px;
+    }
+    
+    /* معاينة الصورة قبل الإرسال */
+    .preview-container {
+      display: flex;
+      gap: 15px; /* زيادة المسافة */
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .preview-image {
+      position: relative;
+      width: 120px; /* زيادة الحجم */
+      height: 120px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2); /* زيادة الظل */
+    }
+    
+    .preview-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .remove-image {
+      position: absolute;
+      top: 8px; /* زيادة المسافة */
+      right: 8px;
+      background: rgba(0,0,0,0.5);
+      border: none;
+      color: white;
+      width: 25px; /* زيادة الحجم */
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px; /* زيادة حجم الخط */
+    }
+    
+    .send-btn {
+      padding: 0 30px; /* زيادة الحشوة */
+      height: 55px; /* زيادة الارتفاع */
+      background: linear-gradient(to right, #4cc9f0, #4361ee);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 1.2rem; /* زيادة حجم الخط */
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3); /* زيادة الظل */
+    }
+    
+    .send-btn:hover {
+      transform: translateY(-3px); /* زيادة الحركة */
+      box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
+    }
+    
+    .send-btn:active {
+      transform: translateY(2px);
+    }
+    
+    .send-btn svg {
+      width: 24px; /* زيادة الحجم */
+      height: 24px;
+    }
+    
+    /* Typing indicator */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding: 12px 18px; /* زيادة الحشوة */
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 24px; /* زيادة نصف القطر */
+      width: fit-content;
+      transform-style: preserve-3d;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1) translateZ(0);
+      }
+      50% {
+        transform: scale(1.08) translateZ(8px); /* زيادة الحركة */
+      }
+    }
+    
+    .typing-dot {
+      width: 10px; /* زيادة الحجم */
+      height: 10px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      margin: 0 3px; /* زيادة المسافة */
+      animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+    
+    .typing-dot:nth-child(1) {
+      animation-delay: 0s;
+    }
+    
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    @keyframes typingAnimation {
+      0%, 60%, 100% {
+        transform: translateY(0);
+      }
+      30% {
+        transform: translateY(-8px); /* زيادة الحركة */
+      }
+    }
+    
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 10px; /* زيادة العرض */
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, #f72585, #4361ee);
+      border-radius: 10px;
+    }
+    
+    /* Responsive design */
+    @media (max-width: 1024px) {
+      .app-container {
+        min-width: auto;
+        width: 100%;
+      }
+      
+      .login-card {
+        padding: 2rem;
+        max-width: 90%;
+      }
+      
+      .app-title {
+        font-size: 2.5rem;
+      }
+      
+      .message {
+        max-width: 85%;
+      }
+      
+      .preview-image {
+        width: 100px;
+        height: 100px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .login-card {
+        padding: 1.5rem;
+      }
+      
+      .app-title {
+        font-size: 2rem;
+      }
+      
+      .input-group input,
+      .message-input {
+        font-size: 1rem;
+        padding: 15px 20px;
+      }
+      
+      .btn,
+      .send-btn {
+        font-size: 1rem;
+        padding: 15px;
+      }
+      
+      .attach-btn svg,
+      .send-btn svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating particles background -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- Login Screen -->
+  <div class="login-container" id="login">
+    <div class="login-card">
+      <h1 class="app-title">Hefi Chat 3D</h1>
+      <div class="input-group">
+        <input type="text" id="username" placeholder=" " required>
+        <label for="username">Nama Pengguna</label>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder=" " required>
+        <label for="password">Kata Sandi</label>
+      </div>
+      <button class="btn" onclick="masuk()">Masuk</button>
+    </div>
+  </div>
+  
+  <!-- Chat Screen -->
+  <div class="app-container" id="chat">
+    <div class="chat-header">
+      <h2 class="chat-title" id="roomTitle">Obrolan Pribadi ❤️</h2>
+      <div class="typing-indicator" id="typingIndicator" style="display: none;">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+    </div>
+    
+    <div class="chat-box" id="chatBox"></div>
+    
+    <!-- معاينة الصور المرفقة -->
+    <div class="preview-container" id="imagePreview"></div>
+    
+    <div class="message-input-container">
+      <button class="attach-btn" onclick="document.getElementById('fileInput').click()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+        </svg>
+      </button>
+      <input type="file" id="fileInput" accept="image/*" style="display:none;" multiple>
+      <input type="text" class="message-input" id="pesan" placeholder="Ketik pesan...">
+      <button class="send-btn" onclick="kirim()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+  <script>
+    // Initialize particles background
+    function initParticles() {
+      const container = document.getElementById('particles');
+      const particleCount = window.innerWidth < 768 ? 30 : 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random size between 2px and 6px
+        const size = Math.random() * 4 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        // Random animation duration between 10s and 20s
+        const duration = Math.random() * 10 + 10;
+        particle.style.animationDuration = `${duration}s`;
+        
+        // Random delay
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        
+        container.appendChild(particle);
+      }
+    }
+    
+    // Konfigurasi Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAqzN5UAnZ9czO9FbXuGp0ENeHdMv2ft1E",
+      authDomain: "hefi-love-game.firebaseapp.com",
+      databaseURL: "https://hefi-love-game-default-rtdb.firebaseio.com",
+      projectId: "hefi-love-game",
+      storageBucket: "hefi-love-game.appspot.com",
+      messagingSenderId: "1068899497085",
+      appId: "1:1068899497085:web:67d58a2765c7f99b420470"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let nama = "";
+    let ruang = "ruang_kita_berdua";
+    let isTyping = false;
+    let lastTypingTime = 0;
+    let attachedImages = []; // تخزين الصور المرفقة
+
+    // نغمات تفاعلية
+    const sounds = {
+      send: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3'),
+      receive: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3'),
+      notification: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3'),
+      error: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3')
+    };
+
+    // ضبط حجم النغمات
+    Object.values(sounds).forEach(sound => {
+      sound.volume = 0.3; // تخفيض الصوت لتجنب الإزعاج
+    });
+
+    function encrypt(msg) {
+      return btoa(unescape(encodeURIComponent(msg)));
+    }
+
+    function decrypt(msg) {
+      return decodeURIComponent(escape(atob(msg)));
+    }
+
+    function formatTime(timestamp) {
+      const date = new Date(timestamp);
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // تحديث معاينة الصور المرفقة
+    function updateImagePreview() {
+      const previewContainer = document.getElementById('imagePreview');
+      previewContainer.innerHTML = '';
+      
+      attachedImages.forEach((image, index) => {
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'preview-image';
+        
+        const img = document.createElement('img');
+        img.src = image;
+        
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-image';
+        removeBtn.innerHTML = '×';
+        removeBtn.onclick = () => {
+          attachedImages.splice(index, 1);
+          updateImagePreview();
+          sounds.error.play(); // صوت عند الحذف
+        };
+        
+        previewDiv.appendChild(img);
+        previewDiv.appendChild(removeBtn);
+        previewContainer.appendChild(previewDiv);
+      });
+    }
+
+    // عند اختيار صورة
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+      const files = e.target.files;
+      if (files.length > 0) {
+        sounds.notification.play(); // صوت عند اختيار صورة
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+              attachedImages.push(event.target.result);
+              updateImagePreview();
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+      }
+      // Reset input file untuk memungkinkan memilih file yang sama lagi
+      e.target.value = '';
+    });
+
+    function masuk() {
+      const pass = document.getElementById("password").value;
+      if (pass !== "2512") {
+        sounds.error.play(); // صوت عند الخطأ
+        // Shake animation for wrong password
+        const loginCard = document.querySelector('.login-card');
+        loginCard.style.animation = 'none';
+        void loginCard.offsetWidth; // Trigger reflow
+        loginCard.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
+        
+        // Add shake animation
+        const style = document.createElement('style');
+        style.innerHTML = `
+          @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0) rotateY(5deg); }
+            20%, 80% { transform: translate3d(2px, 0, 0) rotateY(-5deg); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0) rotateY(10deg); }
+            40%, 60% { transform: translate3d(4px, 0, 0) rotateY(-10deg); }
+          }
+        `;
+        document.head.appendChild(style);
+        
+        setTimeout(() => {
+          document.head.removeChild(style);
+        }, 500);
+        
+        return;
+      }
+      
+      nama = document.getElementById("username").value.trim();
+      if (!nama) {
+        sounds.error.play(); // صوت عند الخطأ
+        // Highlight the username field
+        const usernameInput = document.getElementById("username");
+        usernameInput.style.borderColor = '#f72585';
+        usernameInput.style.boxShadow = '0 0 0 3px rgba(247, 37, 133, 0.3)';
+        setTimeout(() => {
+          usernameInput.style.borderColor = 'transparent';
+          usernameInput.style.boxShadow = 'none';
+        }, 1000);
+        return;
+      }
+      
+      sounds.notification.play(); // صوت عند الدخول الناجح
+      
+      // 3D flip transition to chat
+      const loginContainer = document.getElementById("login");
+      loginContainer.style.transform = 'rotateY(90deg) scale(0.8)';
+      loginContainer.style.opacity = '0';
+      
+      setTimeout(() => {
+        loginContainer.style.display = 'none';
+        const chatContainer = document.getElementById("chat");
+        chatContainer.style.display = 'flex';
+        chatContainer.style.opacity = '0';
+        chatContainer.style.transform = 'rotateY(-90deg) scale(0.8)';
+        
+        setTimeout(() => {
+          chatContainer.style.transform = 'rotateY(0) scale(1)';
+          chatContainer.style.opacity = '1';
+        }, 50);
+        
+        document.getElementById("roomTitle").innerText = `Obrolan dengan ${nama} ❤️`;
+        mulaiMendengarkan();
+      }, 600);
+    }
+
+    function kirim() {
+      const pesanInput = document.getElementById("pesan");
+      const pesan = pesanInput.value.trim();
+      
+      // Button press animation
+      const sendBtn = document.querySelector('.send-btn');
+      sendBtn.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        sendBtn.style.transform = 'scale(1)';
+      }, 100);
+      
+      // إذا لم يكن هناك رسالة ولا صور مرفقة، لا تفعل شيئا
+      if (!pesan && attachedImages.length === 0) {
+        sounds.error.play(); // صوت عند المحاولة الفارغة
+        return;
+      }
+      
+      // تشغيل صوت الإرسال
+      sounds.send.play();
+      
+      // إرسال الرسالة النصية إذا وجدت
+      if (pesan) {
+        const pesanData = {
+          nama: nama,
+          teks: encrypt(pesan),
+          waktu: Date.now(),
+          type: 'text'
+        };
+        
+        db.ref("pesan/" + ruang).push(pesanData);
+        pesanInput.value = "";
+      }
+      
+      // إرسال الصور المرفقة إذا وجدت
+      attachedImages.forEach(image => {
+        const imageData = {
+          nama: nama,
+          image: image,
+          waktu: Date.now(),
+          type: 'image'
+        };
+        
+        db.ref("pesan/" + ruang).push(imageData);
+      });
+      
+      // مسح الصور المرفقة بعد الإرسال
+      attachedImages = [];
+      updateImagePreview();
+      
+      // Stop typing indicator
+      isTyping = false;
+      db.ref("typing/" + ruang).child(nama).set(false);
+    }
+
+    function mulaiMendengarkan() {
+      // Listen for new messages
+      db.ref("pesan/" + ruang).on("child_added", snapshot => {
+        const data = snapshot.val();
+        const div = document.createElement("div");
+        
+        div.className = "message " + (data.nama === nama ? "me" : "other");
+        
+        if (data.type === 'image') {
+          // عرض الصورة
+          div.innerHTML = `
+            <span class="message-sender">${data.nama}</span>
+            <img src="${data.image}" class="message-image" alt="Sent image">
+            <span class="message-time">${formatTime(data.waktu)}</span>
+          `;
+        } else {
+          // عرض الرسالة النصية
+          const teks = decrypt(data.teks);
+          div.innerHTML = `
+            <span class="message-sender">${data.nama}</span>
+            ${teks}
+            <span class="message-time">${formatTime(data.waktu)}</span>
+          `;
+        }
+        
+        document.getElementById("chatBox").appendChild(div);
+        document.getElementById("chatBox").scrollTop = document.getElementById("chatBox").scrollHeight;
+        
+        // تشغيل صوت الاستلام فقط للرسائل الواردة
+        if (data.nama !== nama) {
+          sounds.receive.play(); // صوت عند استلام رسالة
+          
+          // Add special effect for new messages
+          setTimeout(() => {
+            div.style.transform = 'translateZ(15px)';
+            setTimeout(() => {
+              div.style.transform = 'translateZ(0)';
+            }, 300);
+          }, 500);
+        }
+      });
+      
+      // Typing indicator
+      db.ref("typing/" + ruang).on("child_added", snapshot => {
+        if (snapshot.key !== nama && snapshot.val()) {
+          document.getElementById("typingIndicator").style.display = "flex";
+          sounds.notification.play(); // صوت عند بدء الكتابة من الطرف الآخر
+        }
+      });
+      
+      db.ref("typing/" + ruang).on("child_changed", snapshot => {
+        if (snapshot.key !== nama) {
+          document.getElementById("typingIndicator").style.display = snapshot.val() ? "flex" : "none";
+        }
+      });
+      
+      // Listen for input events to show typing indicator
+      document.getElementById("pesan").addEventListener('input', () => {
+        const currentTime = new Date().getTime();
+        if (!isTyping) {
+          isTyping = true;
+          db.ref("typing/" + ruang).child(nama).set(true);
+          lastTypingTime = currentTime;
+        } else {
+          lastTypingTime = currentTime;
+        }
+        
+        // Stop typing after 2 seconds of inactivity
+        setTimeout(() => {
+          if (currentTime - lastTypingTime >= 2000 && isTyping) {
+            isTyping = false;
+            db.ref("typing/" + ruang).child(nama).set(false);
+          }
+        }, 2000);
+      });
+    }
+    
+    // Initialize the app
+    window.onload = function() {
+      initParticles();
+      
+      // Add floating animation to login card
+      const loginCard = document.querySelector('.login-card');
+      setInterval(() => {
+        const time = Date.now() * 0.001;
+        const y = Math.sin(time * 0.5) * 8; // زيادة الحركة
+        const x = Math.cos(time * 0.3) * 8;
+        loginCard.style.transform = `translate3d(${x}px, ${y}px, 0) rotateX(${y * 0.3}deg) rotateY(${x * 0.3}deg)`;
+      }, 50);
+    };
+  </script>
+</body>
+</html>
