@@ -1,1259 +1,912 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hefi Chat 3D Pro</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #4361ee;
-      --secondary: #3f37c9;
-      --accent: #4895ef;
-      --light: #f8f9fa;
-      --dark: #212529;
-      --success: #4cc9f0;
-      --me-message: linear-gradient(135deg, #4361ee, #3f37c9);
-      --other-message: linear-gradient(135deg, #f72585, #b5179e);
-      --danger: #f72585;
-    }
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    
-    body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1a1a2e, #16213e);
-      color: white;
-      min-height: 100vh;
-      perspective: 1000px;
-      overflow-x: hidden;
-    }
-    
-    .app-container {
-      max-width: 1200px;
-      min-width: 900px;
-      margin: 0 auto;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .particles {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
-    
-    .particle {
-      position: absolute;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 50%;
-      animation: floatParticle linear infinite;
-    }
-    
-    @keyframes floatParticle {
-      0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 0;
-      }
-      10% {
-        opacity: 1;
-      }
-      90% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-1000px) rotate(720deg);
-        opacity: 0;
-      }
-    }
-    
-    .login-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      padding: 2rem;
-      transform-style: preserve-3d;
-      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-    
-    .login-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 3rem;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transform-style: preserve-3d;
-      animation: fadeIn 0.8s ease-out;
-    }
-    
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px) rotateX(30deg);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) rotateX(0);
-      }
-    }
-    
-    .app-title {
-      font-size: 3rem;
-      font-weight: 600;
-      margin-bottom: 2rem;
-      text-align: center;
-      background: linear-gradient(to right, #f72585, #4361ee, #4cc9f0);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      position: relative;
-    }
-    
-    .app-title::after {
-      content: '';
-      position: absolute;
-      bottom: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 70px;
-      height: 4px;
-      background: linear-gradient(to right, #f72585, #4361ee);
-      border-radius: 3px;
-    }
-    
-    .input-group {
-      margin-bottom: 2rem;
-      position: relative;
-    }
-    
-    .input-group input {
-      width: 100%;
-      padding: 18px 25px;
-      font-size: 1.2rem;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      border-radius: 12px;
-      color: white;
-      transition: all 0.3s ease;
-      border: 1px solid transparent;
-    }
-    
-    .input-group input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(72, 149, 239, 0.3);
-      transform: translateY(-3px);
-    }
-    
-    .input-group label {
-      position: absolute;
-      left: 25px;
-      top: 18px;
-      font-size: 1.2rem;
-      color: rgba(255, 255, 255, 0.7);
-      transition: all 0.3s ease;
-      pointer-events: none;
-    }
-    
-    .input-group input:focus + label,
-    .input-group input:not(:placeholder-shown) + label {
-      top: -12px;
-      left: 15px;
-      font-size: 1rem;
-      background: #16213e;
-      padding: 0 8px;
-      color: var(--accent);
-    }
-    
-    .btn {
-      width: 100%;
-      padding: 18px;
-      font-size: 1.2rem;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(to right, #f72585, #b5179e);
-      color: white;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 6px 20px rgba(247, 37, 133, 0.3);
-    }
-    
-    .btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 25px rgba(247, 37, 133, 0.4);
-    }
-    
-    .btn:active {
-      transform: translateY(2px);
-    }
-    
-    .btn::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to right, #b5179e, #f72585);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-    
-    .btn:hover::after {
-      opacity: 1;
-    }
-    
-    .chat-container {
-      display: none;
-      flex-direction: column;
-      height: 100vh;
-      padding: 1.5rem;
-      max-width: 1400px;
-      margin: 0 auto;
-      transform-style: preserve-3d;
-    }
-    
-    .chat-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.5rem;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-radius: 18px;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-      transform: translateZ(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .chat-title {
-      font-size: 2rem;
-      font-weight: 500;
-      background: linear-gradient(to right, #4cc9f0, #4361ee);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    
-    .chat-box {
-      flex: 1;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border-radius: 18px;
-      padding: 2rem;
-      overflow-y: auto;
-      margin-bottom: 1.5rem;
-      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
-      transform-style: preserve-3d;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .message {
-      margin-bottom: 1.5rem;
-      padding: 15px 20px;
-      border-radius: 18px;
-      max-width: 75%;
-      position: relative;
-      transform-style: preserve-3d;
-      animation: messageIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      opacity: 0;
-      transform: translateY(25px) rotateX(30deg);
-    }
-    
-    @keyframes messageIn {
-      to {
-        opacity: 1;
-        transform: translateY(0) rotateX(0);
-      }
-    }
-    
-    .me {
-      align-self: flex-end;
-      background: var(--me-message);
-      color: white;
-      border-top-right-radius: 8px;
-      box-shadow: -6px 6px 20px rgba(67, 97, 238, 0.3);
-    }
-    
-    .other {
-      align-self: flex-start;
-      background: var(--other-message);
-      color: white;
-      border-top-left-radius: 8px;
-      box-shadow: 6px 6px 20px rgba(247, 37, 133, 0.3);
-    }
-    
-    .message-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 5px;
-    }
-    
-    .message-sender {
-      font-weight: 500;
-      font-size: 1rem;
-      display: block;
-    }
-    
-    .message-actions {
-      display: flex;
-      gap: 5px;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-    
-    .message:hover .message-actions {
-      opacity: 1;
-    }
-    
-    .message-action-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    
-    .message-action-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.1);
-    }
-    
-    .copy-btn {
-      color: var(--accent);
-    }
-    
-    .forward-btn {
-      color: var(--success);
-    }
-    
-    .delete-btn {
-      color: var(--danger);
-    }
-    
-    .message-time {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      text-align: right;
-      margin-top: 8px;
-      display: block;
-    }
-    
-    .message-image {
-      max-width: 100%;
-      max-height: 400px;
-      border-radius: 12px;
-      margin-top: 10px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-    
-    .message-image:hover {
-      transform: scale(1.03) translateZ(10px);
-    }
-    
-    .message-input-container {
-      display: flex;
-      gap: 1.5rem;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 1.5rem;
-      border-radius: 18px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      align-items: center;
-    }
-    
-    .message-input {
-      flex: 1;
-      padding: 15px 25px;
-      font-size: 1.2rem;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      border-radius: 12px;
-      color: white;
-      transition: all 0.3s ease;
-    }
-    
-    .message-input:focus {
-      outline: none;
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 0 4px rgba(72, 149, 239, 0.3);
-    }
-    
-    .attach-btn {
-      background: transparent;
-      border: none;
-      cursor: pointer;
-      padding: 0 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-      color: rgba(255, 255, 255, 0.7);
-    }
-    
-    .attach-btn:hover {
-      color: var(--accent);
-      transform: translateY(-3px) rotate(-15deg);
-    }
-    
-    .attach-btn svg {
-      width: 28px;
-      height: 28px;
-    }
-    
-    .preview-container {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-    
-    .preview-image {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-    }
-    
-    .preview-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    
-    .remove-image {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(0,0,0,0.5);
-      border: none;
-      color: white;
-      width: 25px;
-      height: 25px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    
-    .send-btn {
-      padding: 0 30px;
-      height: 55px;
-      background: linear-gradient(to right, #4cc9f0, #4361ee);
-      border: none;
-      border-radius: 12px;
-      color: white;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
-    }
-    
-    .send-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
-    }
-    
-    .send-btn:active {
-      transform: translateY(2px);
-    }
-    
-    .send-btn svg {
-      width: 24px;
-      height: 24px;
-    }
-    
-    .typing-indicator {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      padding: 12px 18px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 24px;
-      width: fit-content;
-      transform-style: preserve-3d;
-      animation: pulse 2s infinite;
-    }
-    
-    @keyframes pulse {
-      0%, 100% {
-        transform: scale(1) translateZ(0);
-      }
-      50% {
-        transform: scale(1.08) translateZ(8px);
-      }
-    }
-    
-    .typing-dot {
-      width: 10px;
-      height: 10px;
-      background: rgba(255, 255, 255, 0.7);
-      border-radius: 50%;
-      margin: 0 3px;
-      animation: typingAnimation 1.4s infinite ease-in-out;
-    }
-    
-    .typing-dot:nth-child(1) {
-      animation-delay: 0s;
-    }
-    
-    .typing-dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    
-    .typing-dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-    
-    @keyframes typingAnimation {
-      0%, 60%, 100% {
-        transform: translateY(0);
-      }
-      30% {
-        transform: translateY(-8px);
-      }
-    }
-    
-    .notification {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 25px;
-      z-index: 1000;
-      transition: transform 0.3s ease;
-    }
-    
-    .notification.show {
-      transform: translateX(-50%) translateY(0);
-    }
-    
-    .confirmation-dialog {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
-    
-    .confirmation-dialog.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .confirmation-content {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      padding: 2rem;
-      border-radius: 20px;
-      max-width: 400px;
-      width: 90%;
-      transform: translateY(20px);
-      transition: transform 0.3s ease;
-    }
-    
-    .confirmation-dialog.active .confirmation-content {
-      transform: translateY(0);
-    }
-    
-    .confirmation-text {
-      margin-bottom: 1.5rem;
-      font-size: 1.1rem;
-    }
-    
-    .confirmation-buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
-    }
-    
-    .confirm-btn, .cancel-btn {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.2s ease;
-    }
-    
-    .confirm-btn {
-      background: var(--danger);
-      color: white;
-    }
-    
-    .confirm-btn:hover {
-      background: #e3175a;
-    }
-    
-    .cancel-btn {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-    }
-    
-    .cancel-btn:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 10px;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(to bottom, #f72585, #4361ee);
-      border-radius: 10px;
-    }
-    
-    @media (max-width: 1024px) {
-      .app-container {
-        min-width: auto;
-        width: 100%;
-      }
-      
-      .login-card {
-        padding: 2rem;
-        max-width: 90%;
-      }
-      
-      .app-title {
-        font-size: 2.5rem;
-      }
-      
-      .message {
-        max-width: 85%;
-      }
-      
-      .preview-image {
-        width: 100px;
-        height: 100px;
-      }
-    }
-    
-    @media (max-width: 768px) {
-      .login-card {
-        padding: 1.5rem;
-      }
-      
-      .app-title {
-        font-size: 2rem;
-      }
-      
-      .input-group input,
-      .message-input {
-        font-size: 1rem;
-        padding: 15px 20px;
-      }
-      
-      .btn,
-      .send-btn {
-        font-size: 1rem;
-        padding: 15px;
-      }
-      
-      .attach-btn svg,
-      .send-btn svg {
-        width: 22px;
-        height: 22px;
-      }
-      
-      .message-actions {
-        opacity: 1; /* إظهار الأزرار دائماً على الهواتف */
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat 3D 💬</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary: #ff4d94;
+  --primary-light: #ff8ab8;
+  --primary-dark: #e60073;
+  --secondary: #6a11cb;
+  --secondary-light: #8a2be2;
+  --text-light: #ffffff;
+  --text-dark: #333333;
+  --bg-light: rgba(255, 255, 255, 0.15);
+  --bg-medium: rgba(255, 255, 255, 0.25);
+  --bg-dark: rgba(0, 0, 0, 0.2);
+  --success: #4caf50;
+  --danger: #f44336;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* تأثيرات الخلفية */
+.bg-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float 15s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); }
+  25% { transform: translateY(-20px) translateX(10px); }
+  50% { transform: translateY(10px) translateX(-10px); }
+  75% { transform: translateY(-10px) translateX(-15px); }
+}
+
+/* تصميم تسجيل الدخول */
+#loginContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  max-width: 450px;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 25px;
+  box-shadow: var(--shadow);
+  animation: fadeInScale 1s ease forwards;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+#loginContainer::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  z-index: -1;
+}
+
+#loginContainer h1 {
+  margin-bottom: 30px;
+  color: var(--text-light);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+  font-size: 2.5rem;
+  position: relative;
+}
+
+#loginContainer h1::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: var(--primary-light);
+  border-radius: 2px;
+}
+
+.input-group {
+  width: 100%;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-group i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  z-index: 1;
+}
+
+#loginContainer input {
+  width: 100%;
+  padding: 15px 15px 15px 45px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1em;
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-light);
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+}
+
+#loginContainer input:focus {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--primary-light);
+  box-shadow: 0 0 10px rgba(255, 77, 148, 0.5);
+}
+
+#loginContainer input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#loginBtn {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--text-light);
+  font-weight: bold;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+#loginBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: all 0.5s ease;
+  z-index: -1;
+}
+
+#loginBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+#loginBtn:hover::before {
+  left: 100%;
+}
+
+#loginBtn:active {
+  transform: translateY(0);
+}
+
+/* تصميم واجهة الدردشة */
+#chatContainer {
+  display: none;
+  flex-direction: column;
+  width: 95%;
+  max-width: 600px;
+  height: 90vh;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px);
+  border-radius: 25px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  animation: fadeInScale 1s ease forwards;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1;
+}
+
+#chatHeader {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--text-light);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+#chatHeader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+}
+
+#chatArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* تخصيص شريط التمرير */
+#chatArea::-webkit-scrollbar {
+  width: 8px;
+}
+
+#chatArea::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+#chatArea::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+#chatArea::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+.message {
+  margin: 12px 0;
+  padding: 15px;
+  border-radius: 20px;
+  max-width: 75%;
+  position: relative;
+  word-wrap: break-word;
+  transition: all 0.3s ease;
+  animation: messageSlideIn 0.5s ease forwards;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.message.you {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--text-light);
+  align-self: flex-end;
+  border-bottom-right-radius: 5px;
+}
+
+.message.other {
+  background: var(--bg-medium);
+  color: var(--text-dark);
+  align-self: flex-start;
+  border-bottom-left-radius: 5px;
+}
+
+.message img {
+  max-width: 100%;
+  border-radius: 15px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.message img:hover {
+  transform: scale(1.03);
+}
+
+.message-info {
+  font-size: 0.8em;
+  opacity: 0.7;
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#inputContainer {
+  display: flex;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#msgInput {
+  flex: 1;
+  padding: 15px 20px;
+  border-radius: 25px;
+  border: none;
+  outline: none;
+  background: rgba(255, 255, 255, 0.25);
+  font-size: 1em;
+  color: var(--text-dark);
+  transition: all 0.3s ease;
+}
+
+#msgInput:focus {
+  background: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 10px rgba(255, 77, 148, 0.3);
+}
+
+#sendBtn, #imgBtn {
+  padding: 15px 20px;
+  margin-left: 10px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--text-light);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+}
+
+#sendBtn:hover, #imgBtn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(255, 77, 148, 0.5);
+}
+
+#sendBtn:active, #imgBtn:active {
+  transform: translateY(0);
+}
+
+/* نافذة عرض الصورة */
+#imgModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+#imgModal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 15px;
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
+  animation: scaleIn 0.3s ease;
+}
+
+#closeModal {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#closeModal:hover {
+  transform: scale(1.2);
+  color: var(--primary-light);
+}
+
+/* زر الحذف */
+.deletePopup {
+  position: absolute;
+  top: -30px;
+  right: 0;
+  background: var(--danger);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.5) rotate(-10deg);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.deletePopup.show {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  pointer-events: auto;
+}
+
+.deletePopup:hover {
+  background: #d32f2f;
+}
+
+/* الرسوم المتحركة */
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes messageSlideIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* تأثيرات النص المتلألئة */
+.glowing-text {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
+  to { text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); }
+}
+
+/* تأثيرات الاهتزاز */
+.vibrate {
+  animation: vibrate 0.3s linear;
+}
+
+@keyframes vibrate {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+/* تصميم متجاوب */
+@media (max-width: 768px) {
+  #chatContainer {
+    width: 98%;
+    height: 95vh;
+    border-radius: 20px;
+  }
+  
+  #loginContainer {
+    width: 95%;
+    padding: 30px 20px;
+  }
+  
+  .message {
+    max-width: 85%;
+  }
+  
+  #inputContainer {
+    padding: 10px;
+  }
+  
+  #sendBtn, #imgBtn {
+    width: 45px;
+    height: 45px;
+    padding: 12px;
+  }
+}
+
+/* مؤشر الكتابة */
+.typing-indicator {
+  display: none;
+  align-self: flex-start;
+  background: var(--bg-medium);
+  padding: 10px 15px;
+  border-radius: 20px;
+  margin: 5px 0;
+  font-style: italic;
+  color: var(--text-dark);
+  opacity: 0.7;
+}
+
+.typing-dots {
+  display: inline-block;
+}
+
+.typing-dots span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin: 0 2px;
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-5px); }
+}
+</style>
 </head>
 <body>
-  <div class="particles" id="particles"></div>
+<!-- تأثيرات الخلفية المتحركة -->
+<div class="bg-animation" id="bgAnimation"></div>
+
+<!-- واجهة تسجيل الدخول -->
+<div id="loginContainer">
+  <h1 class="glowing-text">Chat 3D <i class="fas fa-comments"></i></h1>
+  <div class="input-group">
+    <i class="fas fa-user"></i>
+    <input type="text" id="username" placeholder="Nama Anda">
+  </div>
+  <div class="input-group">
+    <i class="fas fa-lock"></i>
+    <input type="password" id="password" placeholder="Kata Sandi">
+  </div>
+  <button id="loginBtn">Masuk <i class="fas fa-sign-in-alt"></i></button>
+</div>
+
+<!-- واجهة الدردشة -->
+<div id="chatContainer">
+  <div id="chatHeader">
+    <div class="user-info">
+      <div class="user-avatar"><i class="fas fa-user"></i></div>
+      <span id="currentUserName"></span>
+    </div>
+    <span>Obrolan <i class="fas fa-comments"></i></span>
+    <div></div> <!-- عنصر فارغ للمحاذاة -->
+  </div>
+  <div id="chatArea">
+    <div class="typing-indicator" id="typingIndicator">
+      Seseorang sedang mengetik <span class="typing-dots"><span></span><span></span><span></span></span>
+    </div>
+  </div>
+  <div id="inputContainer">
+    <input type="text" id="msgInput" placeholder="Ketik pesan Anda" disabled>
+    <button id="imgBtn" title="Unggah Gambar"><i class="fas fa-image"></i></button>
+    <button id="sendBtn" title="Kirim Pesan" disabled><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<!-- نافذة عرض الصورة -->
+<div id="imgModal">
+  <span id="closeModal">&times;</span>
+  <img id="modalImg" src="">
+</div>
+
+<!-- تأثيرات صوتية -->
+<audio id="sendSound" src="https://assets.mixkit.co/sfx/preview/mixkit-message-sent-1320.mp3" preload="auto"></audio>
+<audio id="recvSound" src="https://assets.mixkit.co/sfx/preview/mixkit-notification-bell-592.mp3" preload="auto"></audio>
+<audio id="loginSound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" preload="auto"></audio>
+<audio id="errorSound" src="https://assets.mixkit.co/sfx/preview/mixkit-warning-alarm-buzzer-2951.mp3" preload="auto"></audio>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+import { getDatabase, ref, get, push, onChildAdded, remove, set, onChildRemoved } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA4A8Lg5UrmCCBVF2Pzj1UQLLnpjHCCPJs",
+  authDomain: "fast-a925b.firebaseapp.com",
+  databaseURL: "https://fast-a925b-default-rtdb.firebaseio.com",
+  projectId: "fast-a925b",
+  storageBucket: "fast-a925b.firebasestorage.app",
+  messagingSenderId: "19824847485",
+  appId: "1:19824847485:web:182ac2d4b20533c5685f14",
+  measurementId: "G-9F7MTW1BN2"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const ROOM_ID = "1612"; 
+let currentUser;
+
+// إنشاء تأثيرات الخلفية
+function createBackgroundAnimation() {
+  const bgAnimation = document.getElementById('bgAnimation');
+  for (let i = 0; i < 15; i++) {
+    const bubble = document.createElement('div');
+    bubble.classList.add('bubble');
+    
+    const size = Math.random() * 100 + 50;
+    bubble.style.width = `${size}px`;
+    bubble.style.height = `${size}px`;
+    
+    bubble.style.left = `${Math.random() * 100}%`;
+    bubble.style.top = `${Math.random() * 100}%`;
+    
+    bubble.style.animationDelay = `${Math.random() * 15}s`;
+    bubble.style.animationDuration = `${15 + Math.random() * 10}s`;
+    
+    bgAnimation.appendChild(bubble);
+  }
+}
+
+// تهيئة التأثيرات الصوتية
+const sendSound = document.getElementById('sendSound');
+const recvSound = document.getElementById('recvSound');
+const loginSound = document.getElementById('loginSound');
+const errorSound = document.getElementById('errorSound');
+
+// تهيئة التطبيق
+document.addEventListener('DOMContentLoaded', function() {
+  createBackgroundAnimation();
   
-  <div class="login-container" id="login">
-    <div class="login-card">
-      <h1 class="app-title">Hefi Chat 3D</h1>
-      <div class="input-group">
-        <input type="text" id="username" placeholder=" " required>
-        <label for="username">Nama Pengguna</label>
-      </div>
-      <div class="input-group">
-        <input type="password" id="password" placeholder=" " required>
-        <label for="password">Kata Sandi</label>
-      </div>
-      <button class="btn" onclick="masuk()">Masuk</button>
-    </div>
-  </div>
+  document.getElementById('loginBtn').addEventListener('click', handleLogin);
+  document.getElementById('username').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') handleLogin();
+  });
+  document.getElementById('password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') handleLogin();
+  });
+});
+
+async function handleLogin() {
+  const username = document.getElementById('username').value.trim();
+  const password = document.getElementById('password').value.trim();
   
-  <div class="app-container" id="chat">
-    <div class="chat-header">
-      <h2 class="chat-title" id="roomTitle">Obrolan Pribadi ❤️</h2>
-      <div class="typing-indicator" id="typingIndicator" style="display: none;">
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-        <div class="typing-dot"></div>
-      </div>
-    </div>
-    
-    <div class="chat-box" id="chatBox"></div>
-    
-    <div class="preview-container" id="imagePreview"></div>
-    
-    <div class="message-input-container">
-      <button class="attach-btn" onclick="document.getElementById('fileInput').click()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
-        </svg>
-      </button>
-      <input type="file" id="fileInput" accept="image/*" style="display:none;" multiple>
-      <input type="text" class="message-input" id="pesan" placeholder="Ketik pesan...">
-      <button class="send-btn" onclick="kirim()">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"></line>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-        </svg>
-      </button>
-    </div>
-  </div>
+  if(!username || !password){ 
+    showError("Masukkan nama dan kata sandi");
+    return; 
+  }
 
-  <!-- نافذة تأكيد الحذف -->
-  <div class="confirmation-dialog" id="confirmationDialog">
-    <div class="confirmation-content">
-      <div class="confirmation-text" id="confirmationText">Apakah Anda yakin ingin menghapus pesan ini?</div>
-      <div class="confirmation-buttons">
-        <button class="cancel-btn" id="cancelDelete">Batal</button>
-        <button class="confirm-btn" id="confirmDelete">Hapus</button>
-      </div>
-    </div>
-  </div>
+  // تأثير اهتزاز للحقول الفارغة
+  if (!username) {
+    document.getElementById('username').classList.add('vibrate');
+    setTimeout(() => document.getElementById('username').classList.remove('vibrate'), 300);
+  }
+  if (!password) {
+    document.getElementById('password').classList.add('vibrate');
+    setTimeout(() => document.getElementById('password').classList.remove('vibrate'), 300);
+  }
 
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+  const userRef = ref(db,'users/'+username);
+  const snap = await get(userRef);
+  
+  if(!snap.exists()){ 
+    showError("Nama pengguna tidak ditemukan!");
+    return; 
+  }
+  
+  if(snap.val().password !== password){ 
+    showError("Kata sandi salah!");
+    return; 
+  }
 
-  <script>
-    function initParticles() {
-      const container = document.getElementById('particles');
-      const particleCount = window.innerWidth < 768 ? 30 : 50;
+  // تسجيل الدخول الناجح
+  currentUser = username;
+  document.getElementById('currentUserName').textContent = currentUser;
+  
+  // تأثير انتقال سلس
+  document.getElementById('loginContainer').style.opacity = '0';
+  document.getElementById('loginContainer').style.transform = 'scale(0.9)';
+  
+  setTimeout(() => {
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('chatContainer').style.display = 'flex';
+    loginSound.play();
+  }, 300);
+  
+  enableChat();
+}
+
+function showError(message) {
+  errorSound.play();
+  alert(message);
+}
+
+function enableChat(){
+  const msgInput = document.getElementById('msgInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const imgBtn = document.getElementById('imgBtn');
+  const chatArea = document.getElementById('chatArea');
+  const imgModal = document.getElementById('imgModal');
+  const modalImg = document.getElementById('modalImg');
+  const closeModal = document.getElementById('closeModal');
+  const typingIndicator = document.getElementById('typingIndicator');
+
+  msgInput.disabled=false; 
+  sendBtn.disabled=false;
+  
+  const roomRef = ref(db,'rooms/'+ROOM_ID+'/messages');
+  const typingRef = ref(db, 'rooms/'+ROOM_ID+'/typing');
+
+  // إضافة رسالة جديدة
+  function createMessageElement(msgData, key){
+    const div = document.createElement('div');
+    div.className = 'message '+(msgData.name===currentUser?'you':'other');
+    div.dataset.key = key;
+
+    if(msgData.img){
+      const img = document.createElement('img');
+      img.src = msgData.img;
+      img.onclick=()=>{ 
+        modalImg.src=img.src; 
+        imgModal.style.display='flex'; 
+      };
+      div.appendChild(img);
       
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        const size = Math.random() * 4 + 2;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.top = `${Math.random() * 100}%`;
-        
-        const duration = Math.random() * 10 + 10;
-        particle.style.animationDuration = `${duration}s`;
-        
-        particle.style.animationDelay = `${Math.random() * 5}s`;
-        
-        container.appendChild(particle);
-      }
-    }
-    
-    const firebaseConfig = {
-      apiKey: "AIzaSyAqzN5UAnZ9czO9FbXuGp0ENeHdMv2ft1E",
-      authDomain: "hefi-love-game.firebaseapp.com",
-      databaseURL: "https://hefi-love-game-default-rtdb.firebaseio.com",
-      projectId: "hefi-love-game",
-      storageBucket: "hefi-love-game.appspot.com",
-      messagingSenderId: "1068899497085",
-      appId: "1:1068899497085:web:67d58a2765c7f99b420470"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    let nama = "";
-    let ruang = "ruang_kita_berdua";
-    let isTyping = false;
-    let lastTypingTime = 0;
-    let attachedImages = [];
-    let currentMessageToDelete = null;
-
-    // مكتبة الأصوات التفاعلية
-    const sounds = {
-      login: {
-        audio: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3'),
-        volume: 0.4
-      },
-      send: {
-        audio: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3'),
-        volume: 0.3
-      },
-      receive: {
-        audio: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3'),
-        volume: 0.3
-      },
-      error: {
-        audio: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3'),
-        volume: 0.3
-      },
-      typing: {
-        audio: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3'),
-        volume: 0.2
-      },
-      attachment: {
-        audio: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-interface-hint-notification-911.mp3'),
-        volume: 0.3
-      },
-      delete: {
-        audio: new Audio('https://assets.mixkit.co/sfx/preview/mixkit-arcade-game-explosion-2759.mp3'),
-        volume: 0.3
-      }
-    };
-
-    Object.values(sounds).forEach(sound => {
-      sound.audio.volume = sound.volume;
-      sound.audio.preload = 'auto';
-    });
-
-    function playSound(soundType) {
-      try {
-        const sound = sounds[soundType];
-        if (sound) {
-          sound.audio.currentTime = 0;
-          sound.audio.play().catch(e => console.log("Cannot play sound:", e));
-        }
-      } catch (e) {
-        console.error("Sound error:", e);
-      }
+      const textDiv = document.createElement('div');
+      textDiv.className = 'message-info';
+      textDiv.innerHTML = `<span>${msgData.name}</span><span>Gambar</span>`;
+      div.appendChild(textDiv);
+    } else { 
+      div.innerText = msgData.text; 
+      
+      const textDiv = document.createElement('div');
+      textDiv.className = 'message-info';
+      textDiv.innerHTML = `<span>${msgData.name}</span><span>${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>`;
+      div.appendChild(textDiv);
     }
 
-    function encrypt(msg) {
-      return btoa(unescape(encodeURIComponent(msg)));
-    }
+    // إضافة زر الحذف للرسائل الخاصة بالمستخدم
+    if(msgData.name===currentUser){
+      const delPopup = document.createElement('div');
+      delPopup.className='deletePopup';
+      delPopup.innerHTML = '<i class="fas fa-trash"></i> Hapus';
+      delPopup.onclick=()=>{ 
+        remove(ref(db,'rooms/'+ROOM_ID+'/messages/'+key)).then(()=>{
+          div.style.opacity = '0';
+          div.style.transform = 'scale(0.8)';
+          setTimeout(() => div.remove(), 300);
+        }); 
+      };
+      div.appendChild(delPopup);
 
-    function decrypt(msg) {
-      return decodeURIComponent(escape(atob(msg)));
-    }
-
-    function formatTime(timestamp) {
-      const date = new Date(timestamp);
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function updateImagePreview() {
-      const previewContainer = document.getElementById('imagePreview');
-      previewContainer.innerHTML = '';
-      
-      attachedImages.forEach((image, index) => {
-        const previewDiv = document.createElement('div');
-        previewDiv.className = 'preview-image';
-        
-        const img = document.createElement('img');
-        img.src = image;
-        
-        const removeBtn = document.createElement('button');
-        removeBtn.className = 'remove-image';
-        removeBtn.innerHTML = '×';
-        removeBtn.onclick = () => {
-          attachedImages.splice(index, 1);
-          updateImagePreview();
-          playSound('error');
-        };
-        
-        previewDiv.appendChild(img);
-        previewDiv.appendChild(removeBtn);
-        previewContainer.appendChild(previewDiv);
-      });
-    }
-
-    function createMessageElement(data, messageId) {
-      const div = document.createElement("div");
-      div.className = "message " + (data.nama === nama ? "me" : "other");
-      div.dataset.messageId = messageId;
-      
-      const messageContent = data.type === 'image' ? 
-        `<img src="${data.image}" class="message-image" alt="Sent image">` :
-        `<div class="message-text">${decrypt(data.teks)}</div>`;
-      
-      div.innerHTML = `
-        <div class="message-header">
-          <span class="message-sender">${data.nama}</span>
-          <div class="message-actions">
-            <button class="message-action-btn copy-btn" title="Salin Pesan">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-            </button>
-            <button class="message-action-btn forward-btn" title="Teruskan Pesan">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 17 20 12 15 7"></polyline>
-                <path d="M4 18v-2a4 4 0 0 1 4-4h12"></path>
-              </svg>
-            </button>
-            ${data.nama === nama ? `
-            <button class="message-action-btn delete-btn" title="Hapus Pesan">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-              </svg>
-            </button>
-            ` : ''}
-          </div>
-        </div>
-        ${messageContent}
-        <span class="message-time">${formatTime(data.waktu)}</span>
-      `;
-      
-      // إضافة أحداث النقر للأزرار
-      const copyBtn = div.querySelector('.copy-btn');
-      const forwardBtn = div.querySelector('.forward-btn');
-      const deleteBtn = div.querySelector('.delete-btn');
-      
-      copyBtn?.addEventListener('click', (e) => {
+      div.addEventListener('click',(e)=>{
         e.stopPropagation();
-        copyMessage(data);
-      });
-      
-      forwardBtn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        forwardMessage(data);
-      });
-      
-      deleteBtn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showDeleteConfirmation(messageId);
-      });
-      
-      return div;
-    }
-
-    function copyMessage(message) {
-      try {
-        const textToCopy = message.type === 'text' ? decrypt(message.teks) : message.image;
-        navigator.clipboard.writeText(textToCopy).then(() => {
-          showNotification('Pesan berhasil disalin!');
-          playSound('send');
-        });
-      } catch (e) {
-        showNotification('Gagal menyalin pesan');
-        playSound('error');
-      }
-    }
-
-    function forwardMessage(message) {
-      const forwardText = prompt('Kirim pesan ini ke:', '');
-      if (forwardText) {
-        const pesanData = {
-          nama: nama,
-          teks: encrypt(`[Diteruskan dari ${message.nama}]: ${message.type === 'text' ? decrypt(message.teks) : '[Gambar]'}\n\n${forwardText}`),
-          waktu: Date.now(),
-          type: 'text'
-        };
-        
-        db.ref("pesan/" + ruang).push(pesanData);
-        showNotification('Pesan berhasil diteruskan!');
-        playSound('send');
-      }
-    }
-
-    function showDeleteConfirmation(messageId) {
-      currentMessageToDelete = messageId;
-      const dialog = document.getElementById('confirmationDialog');
-      dialog.classList.add('active');
-    }
-
-    function hideDeleteConfirmation() {
-      const dialog = document.getElementById('confirmationDialog');
-      dialog.classList.remove('active');
-      currentMessageToDelete = null;
-    }
-
-    function deleteMessage() {
-      if (currentMessageToDelete) {
-        db.ref("pesan/" + ruang + "/" + currentMessageToDelete).remove()
-          .then(() => {
-            showNotification('Pesan berhasil dihapus!');
-            playSound('delete');
-          })
-          .catch((error) => {
-            showNotification('Gagal menghapus pesan');
-            playSound('error');
-          });
-      }
-      hideDeleteConfirmation();
-    }
-
-    function showNotification(message) {
-      const notification = document.createElement('div');
-      notification.className = 'notification';
-      notification.textContent = message;
-      document.body.appendChild(notification);
-      
-      setTimeout(() => {
-        notification.classList.add('show');
-      }, 10);
-      
-      setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-          document.body.removeChild(notification);
-        }, 300);
-      }, 3000);
-    }
-
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-      const files = e.target.files;
-      if (files.length > 0) {
-        playSound('attachment');
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          if (file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-              attachedImages.push(event.target.result);
-              updateImagePreview();
-            };
-            reader.readAsDataURL(file);
-          }
-        }
-      }
-      e.target.value = '';
-    });
-
-    document.getElementById('cancelDelete').addEventListener('click', hideDeleteConfirmation);
-    document.getElementById('confirmDelete').addEventListener('click', deleteMessage);
-
-    function masuk() {
-      const pass = document.getElementById("password").value;
-      if (pass !== "2512") {
-        playSound('error');
-        const loginCard = document.querySelector('.login-card');
-        loginCard.style.animation = 'none';
-        void loginCard.offsetWidth;
-        loginCard.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
-        
-        const style = document.createElement('style');
-        style.innerHTML = `
-          @keyframes shake {
-            10%, 90% { transform: translate3d(-1px, 0, 0) rotateY(5deg); }
-            20%, 80% { transform: translate3d(2px, 0, 0) rotateY(-5deg); }
-            30%, 50%, 70% { transform: translate3d(-4px, 0, 0) rotateY(10deg); }
-            40%, 60% { transform: translate3d(4px, 0, 0) rotateY(-10deg); }
-          }
-        `;
-        document.head.appendChild(style);
-        
-        setTimeout(() => {
-          document.head.removeChild(style);
-        }, 500);
-        
-        return;
-      }
-      
-      nama = document.getElementById("username").value.trim();
-      if (!nama) {
-        playSound('error');
-        const usernameInput = document.getElementById("username");
-        usernameInput.style.borderColor = '#f72585';
-        usernameInput.style.boxShadow = '0 0 0 3px rgba(247, 37, 133, 0.3)';
-        setTimeout(() => {
-          usernameInput.style.borderColor = 'transparent';
-          usernameInput.style.boxShadow = 'none';
-        }, 1000);
-        return;
-      }
-      
-      playSound('login');
-      
-      const loginContainer = document.getElementById("login");
-      loginContainer.style.transform = 'rotateY(90deg) scale(0.8)';
-      loginContainer.style.opacity = '0';
-      
-      setTimeout(() => {
-        loginContainer.style.display = 'none';
-        const chatContainer = document.getElementById("chat");
-        chatContainer.style.display = 'flex';
-        chatContainer.style.opacity = '0';
-        chatContainer.style.transform = 'rotateY(-90deg) scale(0.8)';
-        
-        setTimeout(() => {
-          chatContainer.style.transform = 'rotateY(0) scale(1)';
-          chatContainer.style.opacity = '1';
-        }, 50);
-        
-        document.getElementById("roomTitle").innerText = `Obrolan dengan ${nama} ❤️`;
-        mulaiMendengarkan();
-      }, 600);
-    }
-
-    function kirim() {
-      const pesanInput = document.getElementById("pesan");
-      const pesan = pesanInput.value.trim();
-      
-      const sendBtn = document.querySelector('.send-btn');
-      sendBtn.style.transform = 'scale(0.95)';
-      setTimeout(() => {
-        sendBtn.style.transform = 'scale(1)';
-      }, 100);
-      
-      if (!pesan && attachedImages.length === 0) {
-        playSound('error');
-        return;
-      }
-      
-      playSound('send');
-      
-      if (pesan) {
-        const pesanData = {
-          nama: nama,
-          teks: encrypt(pesan),
-          waktu: Date.now(),
-          type: 'text'
-        };
-        
-        db.ref("pesan/" + ruang).push(pesanData);
-        pesanInput.value = "";
-      }
-      
-      attachedImages.forEach(image => {
-        const imageData = {
-          nama: nama,
-          image: image,
-          waktu: Date.now(),
-          type: 'image'
-        };
-        
-        db.ref("pesan/" + ruang).push(imageData);
-      });
-      
-      attachedImages = [];
-      updateImagePreview();
-      
-      isTyping = false;
-      db.ref("typing/" + ruang).child(nama).set(false);
-    }
-
-    function mulaiMendengarkan() {
-      db.ref("pesan/" + ruang).on("child_added", snapshot => {
-        const data = snapshot.val();
-        const div = createMessageElement(data, snapshot.key);
-        
-        document.getElementById("chatBox").appendChild(div);
-        document.getElementById("chatBox").scrollTop = document.getElementById("chatBox").scrollHeight;
-        
-        if (data.nama !== nama) {
-          playSound('receive');
-          
-          setTimeout(() => {
-            div.style.transform = 'translateZ(15px)';
-            setTimeout(() => {
-              div.style.transform = 'translateZ(0)';
-            }, 300);
-          }, 500);
-        }
-      });
-      
-      db.ref("pesan/" + ruang).on("child_removed", snapshot => {
-        const messageElement = document.querySelector(`[data-message-id="${snapshot.key}"]`);
-        if (messageElement) {
-          messageElement.style.transform = 'scale(0.9)';
-          messageElement.style.opacity = '0';
-          setTimeout(() => {
-            messageElement.remove();
-          }, 300);
-        }
-      });
-      
-      db.ref("typing/" + ruang).on("child_added", snapshot => {
-        if (snapshot.key !== nama && snapshot.val()) {
-          document.getElementById("typingIndicator").style.display = "flex";
-          playSound('typing');
-        }
-      });
-      
-      db.ref("typing/" + ruang).on("child_changed", snapshot => {
-        if (snapshot.key !== nama) {
-          document.getElementById("typingIndicator").style.display = snapshot.val() ? "flex" : "none";
-        }
-      });
-      
-      document.getElementById("pesan").addEventListener('input', () => {
-        const currentTime = new Date().getTime();
-        if (!isTyping) {
-          isTyping = true;
-          db.ref("typing/" + ruang).child(nama).set(true);
-          lastTypingTime = currentTime;
-        } else {
-          lastTypingTime = currentTime;
-        }
-        
-        setTimeout(() => {
-          if (currentTime - lastTypingTime >= 2000 && isTyping) {
-            isTyping = false;
-            db.ref("typing/" + ruang).child(nama).set(false);
-          }
-        }, 2000);
+        const isVisible = delPopup.classList.contains('show');
+        document.querySelectorAll('.deletePopup').forEach(d=>d.classList.remove('show'));
+        if(!isVisible) delPopup.classList.add('show');
       });
     }
+
+    chatArea.appendChild(div);
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    if(msgData.name===currentUser) {
+      sendSound.play();
+    } else {
+      recvSound.play();
+    }
+  }
+
+  // الاستماع للرسائل الجديدة
+  onChildAdded(roomRef, snap => { 
+    createMessageElement(snap.val(), snap.key); 
+  });
+  
+  // الاستماع لحذف الرسائل
+  onChildRemoved(roomRef, snap => {
+    const messageElement = document.querySelector(`.message[data-key="${snap.key}"]`);
+    if (messageElement) {
+      messageElement.style.opacity = '0';
+      messageElement.style.transform = 'scale(0.8)';
+      setTimeout(() => messageElement.remove(), 300);
+    }
+  });
+
+  // إرسال رسالة
+  sendBtn.addEventListener('click',()=>{
+    const msg = msgInput.value.trim(); 
+    if(!msg) return;
     
-    window.onload = function() {
-      initParticles();
-      
-      Object.values(sounds).forEach(sound => {
-        sound.audio.load();
-      });
+    push(roomRef, {name:currentUser, text:msg, timestamp: Date.now()});
+    msgInput.value='';
+    
+    // إخفاء مؤشر الكتابة
+    set(typingRef, { [currentUser]: false });
+  });
 
-      const loginCard = document.querySelector('.login-card');
-      setInterval(() => {
-        const time = Date.now() * 0.001;
-        const y = Math.sin(time * 0.5) * 8;
-        const x = Math.cos(time * 0.3) * 8;
-        loginCard.style.transform = `translate3d(${x}px, ${y}px, 0) rotateX(${y * 0.3}deg) rotateY(${x * 0.3}deg)`;
-      }, 50);
-    };
-  </script>
+  // رفع صورة
+  imgBtn.addEventListener('click',()=>{
+    const fileInput = document.createElement('input');
+    fileInput.type='file'; 
+    fileInput.accept='image/*';
+    fileInput.onchange=e=>{
+      const file = e.target.files[0]; 
+      if(!file) return;
+      
+      const reader = new FileReader();
+      reader.onload=()=> push(roomRef, {name:currentUser, img:reader.result, timestamp: Date.now()});
+      reader.readAsDataURL(file);
+    }
+    fileInput.click();
+  });
+
+  // الكتابة بالزر Enter
+  msgInput.addEventListener('keypress',e=>{ 
+    if(e.key==='Enter') sendBtn.click(); 
+  });
+  
+  // مؤشر الكتابة
+  let typingTimer;
+  msgInput.addEventListener('input', () => {
+    // إظهار مؤشر الكتابة
+    set(typingRef, { [currentUser]: true });
+    
+    // إعادة تعيين المؤقت
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => {
+      set(typingRef, { [currentUser]: false });
+    }, 2000);
+  });
+
+  // الاستماع لمؤشرات الكتابة من المستخدمين الآخرين
+  onChildAdded(typingRef, (snap) => {
+    if (snap.key !== currentUser && snap.val()) {
+      typingIndicator.style.display = 'block';
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+  });
+  
+  onChildAdded(typingRef, (snap) => {
+    if (snap.key !== currentUser && !snap.val()) {
+      // إخفاء مؤشر الكتابة إذا لم يكن هناك أحد يكتب
+      const typingUsers = [];
+      onChildAdded(typingRef, (childSnap) => {
+        if (childSnap.key !== currentUser && childSnap.val()) {
+          typingUsers.push(childSnap.key);
+        }
+      });
+      
+      if (typingUsers.length === 0) {
+        typingIndicator.style.display = 'none';
+      }
+    }
+  });
+
+  // إغلاق نافذة الصورة
+  closeModal.onclick=()=> { 
+    imgModal.style.opacity = '0';
+    setTimeout(() => imgModal.style.display='none', 300);
+  };
+  
+  // إغلاق نافذة الصورة بالنقر خارجها
+  imgModal.addEventListener('click', (e) => {
+    if (e.target === imgModal) {
+      imgModal.style.opacity = '0';
+      setTimeout(() => imgModal.style.display='none', 300);
+    }
+  });
+
+  // إخفاء أزرار الحذف عند النقر في أي مكان
+  document.addEventListener('click',(e)=>{
+    if(!e.target.classList.contains('message') && !e.target.classList.contains('deletePopup')){
+      document.querySelectorAll('.deletePopup').forEach(d=>d.classList.remove('show'));
+    }
+  });
+}
+</script>
 </body>
 </html>
