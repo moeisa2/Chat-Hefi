@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hefi chat </title>
+<title>Chat 3D 💬</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 :root {
   --primary: #ff4d94;
-  --primary-light: #f31836;
+  --primary-light: #ff8ab8;
   --primary-dark: #e60073;
   --secondary: #6a11cb;
   --secondary-light: #8a2be2;
   --text-light: #ffffff;
-  --text-dark: #ffffff;
+  --text-dark: #333333;
   --bg-light: rgba(255, 255, 255, 0.15);
   --bg-medium: rgba(255, 255, 255, 0.25);
   --bg-dark: rgba(0, 0, 0, 0.2);
@@ -22,738 +22,827 @@
   --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, var(--secondary), var(--primary));
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  overflow: hidden;
-  position: relative;
-  padding: 15px;
+body { 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+  background: linear-gradient(135deg, var(--secondary), var(--primary)); 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  min-height: 100vh; 
+  overflow: hidden; 
+  position: relative; 
+  padding: 15px; 
 }
 
 /* تأثيرات الخلفية */
-.bg-animation {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -5;
-  overflow: hidden;
+.bg-animation { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  z-index: -1; 
+  overflow: hidden; 
 }
 
-.bubble {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  animation: float 15s infinite ease-in-out;
+.bubble { 
+  position: absolute; 
+  border-radius: 50%; 
+  background: rgba(255, 255, 255, 0.1); 
+  animation: float 15s infinite ease-in-out; 
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0) translateX(0); }
-  25% { transform: translateY(-20px) translateX(10px); }
-  50% { transform: translateY(10px) translateX(-10px); }
-  75% { transform: translateY(-10px) translateX(-15px); }
+@keyframes float { 
+  0%, 100% { transform: translateY(0) translateX(0); } 
+  25% { transform: translateY(-20px) translateX(10px); } 
+  50% { transform: translateY(10px) translateX(-10px); } 
+  75% { transform: translateY(-10px) translateX(-15px); } 
 }
 
 /* تصميم تسجيل الدخول */
-#loginContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 400px;
-  padding: 30px 25px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(15px);
-  border-radius: 20px;
-  box-shadow: var(--shadow);
-  animation: fadeInScale 1s ease forwards;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+#loginContainer { 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  width: 100%; 
+  max-width: 400px; 
+  padding: 30px 25px; 
+  background: rgba(255, 255, 255, 0.1); 
+  backdrop-filter: blur(20px); 
+  border-radius: 20px; 
+  box-shadow: var(--shadow); 
+  animation: fadeInScale 1s ease forwards; 
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+  position: relative; 
+  overflow: hidden; 
+  z-index: 1; 
 }
 
-#loginContainer::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-  z-index: -1;
+#loginContainer::before { 
+  content: ''; 
+  position: absolute; 
+  top: -50%; 
+  left: -50%; 
+  width: 200%; 
+  height: 200%; 
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); 
+  z-index: -1; 
 }
 
-#loginContainer h1 {
-  margin-bottom: 25px;
-  color: var(--text-light);
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
-  font-size: 2rem;
-  position: relative;
+#loginContainer h1 { 
+  margin-bottom: 25px; 
+  color: var(--text-light); 
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3); 
+  font-size: 2rem; 
+  position: relative; 
 }
 
-#loginContainer h1::after {
-  content: '';
-  position: absolute;
-  bottom: -8px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50px;
-  height: 3px;
-  background: var(--primary-light);
-  border-radius: 2px;
+#loginContainer h1::after { 
+  content: ''; 
+  position: absolute; 
+  bottom: -8px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  width: 50px; 
+  height: 3px; 
+  background: var(--primary-light); 
+  border-radius: 2px; 
 }
 
-.input-group {
-  width: 100%;
-  margin-bottom: 15px;
-  position: relative;
+.input-group { 
+  width: 100%; 
+  margin-bottom: 15px; 
+  position: relative; 
 }
 
-.input-group i {
-  position: absolute;
-  left: 15px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-light);
-  z-index: 1;
+.input-group i { 
+  position: absolute; 
+  left: 15px; 
+  top: 50%; 
+  transform: translateY(-50%); 
+  color: var(--text-light); 
+  z-index: 1; 
 }
 
-#loginContainer input {
-  width: 100%;
-  padding: 12px 12px 12px 40px;
-  border: none;
-  border-radius: 20px;
-  font-size: 0.95em;
-  outline: none;
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--text-light);
-  transition: all 0.3s ease;
-  border: 1px solid transparent;
+#loginContainer input { 
+  width: 100%; 
+  padding: 12px 12px 12px 40px; 
+  border: none; 
+  border-radius: 20px; 
+  font-size: 0.95em; 
+  outline: none; 
+  background: rgba(255, 255, 255, 0.2); 
+  color: var(--text-light); 
+  transition: all 0.3s ease; 
+  border: 1px solid transparent; 
 }
 
-#loginContainer input:focus {
-  background: rgba(255, 255, 255, 0.3);
-  border-color: var(--primary-light);
-  box-shadow: 0 0 10px rgba(255, 77, 148, 0.5);
+#loginContainer input:focus { 
+  background: rgba(255, 255, 255, 0.3); 
+  border-color: var(--primary-light); 
+  box-shadow: 0 0 10px rgba(255, 77, 148, 0.5); 
 }
 
-#loginContainer input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+#loginContainer input::placeholder { 
+  color: rgba(255, 255, 255, 0.7); 
 }
 
-#loginBtn {
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 20px;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: var(--text-light);
-  font-weight: bold;
-  font-size: 1em;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
+#loginBtn { 
+  width: 100%; 
+  padding: 12px; 
+  margin-top: 10px; 
+  border: none; 
+  border-radius: 20px; 
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+  color: var(--text-light); 
+  font-weight: bold; 
+  font-size: 1em; 
+  cursor: pointer; 
+  transition: all 0.3s ease; 
+  position: relative; 
+  overflow: hidden; 
+  z-index: 1; 
 }
 
-#loginBtn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: all 0.5s ease;
-  z-index: -1;
+#loginBtn::before { 
+  content: ''; 
+  position: absolute; 
+  top: 0; 
+  left: -100%; 
+  width: 100%; 
+  height: 100%; 
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent); 
+  transition: all 0.5s ease; 
+  z-index: -1; 
 }
 
-#loginBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+#loginBtn:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); 
 }
 
-#loginBtn:hover::before {
-  left: 100%;
+#loginBtn:hover::before { 
+  left: 100%; 
 }
 
-#loginBtn:active {
-  transform: translateY(0);
+#loginBtn:active { 
+  transform: translateY(0); 
 }
 
 /* تصميم واجهة الدردشة */
-#chatContainer {
-  display: none;
-  flex-direction: column;
-  width: 100%;
-  max-width: 100%;
-  height: calc(100vh - 30px);
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px);
-  border-radius: 20px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  animation: fadeInScale 1s ease forwards;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  position: relative;
-  z-index: 1;
+#chatContainer { 
+  display: none; 
+  flex-direction: column; 
+  width: 100%; 
+  max-width: 100%; 
+  height: calc(100vh - 30px); 
+  background: rgba(255, 255, 255, 0.15); 
+  backdrop-filter: blur(25px); 
+  border-radius: 20px; 
+  box-shadow: var(--shadow); 
+  overflow: hidden; 
+  animation: fadeInScale 1s ease forwards; 
+  border: 1px solid rgba(255, 255, 255, 0.2); 
+  position: relative; 
+  z-index: 1; 
 }
 
-#chatHeader {
-  text-align: center;
-  padding: 15px 20px;
-  font-size: 1.3em;
-  font-weight: bold;
-  color: var(--text-light);
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  flex-shrink: 0;
+#chatHeader { 
+  text-align: center; 
+  padding: 15px 20px; 
+  font-size: 1.3em; 
+  font-weight: bold; 
+  color: var(--text-light); 
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  position: relative; 
+  flex-shrink: 0; 
 }
 
-#chatHeader::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
+#chatHeader::after { 
+  content: ''; 
+  position: absolute; 
+  bottom: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 3px; 
+  background: linear-gradient(90deg, transparent, var(--primary-light), transparent); 
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.user-info { 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
 }
 
-.user-avatar {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1em;
+.user-avatar { 
+  width: 35px; 
+  height: 35px; 
+  border-radius: 50%; 
+  background: rgba(255, 255, 255, 0.3); 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  font-size: 1.1em; 
 }
 
-#chatArea {
-  flex: 1;
-  overflow-y: auto;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  background: rgba(0, 0, 0, 0.05);
+#chatArea { 
+  flex: 1; 
+  overflow-y: auto; 
+  padding: 15px; 
+  display: flex; 
+  flex-direction: column; 
+  background: rgba(0, 0, 0, 0.05); 
 }
 
 /* تخصيص شريط التمرير */
-#chatArea::-webkit-scrollbar {
-  width: 6px;
+#chatArea::-webkit-scrollbar { 
+  width: 6px; 
 }
 
-#chatArea::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+#chatArea::-webkit-scrollbar-track { 
+  background: rgba(255, 255, 255, 0.1); 
+  border-radius: 10px; 
 }
 
-#chatArea::-webkit-scrollbar-thumb {
-  background: var(--primary);
-  border-radius: 10px;
+#chatArea::-webkit-scrollbar-thumb { 
+  background: var(--primary); 
+  border-radius: 10px; 
 }
 
-#chatArea::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
+#chatArea::-webkit-scrollbar-thumb:hover { 
+  background: var(--primary-dark); 
 }
 
-.message {
-  margin: 10px 0;
-  padding: 12px;
-  border-radius: 18px;
-  max-width: 80%;
-  position: relative;
-  word-wrap: break-word;
-  transition: all 0.3s ease;
-  animation: messageSlideIn 0.5s ease forwards;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transform-origin: center bottom;
+.message { 
+  margin: 10px 0; 
+  padding: 12px; 
+  border-radius: 18px; 
+  max-width: 80%; 
+  position: relative; 
+  word-wrap: break-word; 
+  transition: all 0.3s ease; 
+  animation: messageSlideIn 0.5s ease forwards; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+  transform-origin: center bottom; 
 }
 
-.message.you {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: var(--text-light);
-  align-self: flex-end;
-  border-bottom-right-radius: 5px;
+.message.you { 
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+  color: var(--text-light); 
+  align-self: flex-end; 
+  border-bottom-right-radius: 5px; 
 }
 
-.message.other {
-  background: var(--bg-medium);
-  color: var(--text-dark);
-  align-self: flex-start;
-  border-bottom-left-radius: 5px;
+.message.other { 
+  background: var(--bg-medium); 
+  color: var(--text-dark); 
+  align-self: flex-start; 
+  border-bottom-left-radius: 5px; 
 }
 
 /* تأثيرات خاصة للرسائل */
-.message.sent {
-  animation: messageSend 0.6s ease forwards;
+.message.sent { 
+  animation: messageSend 0.6s ease forwards; 
 }
 
-.message.received {
-  animation: messageReceive 0.6s ease forwards;
+.message.received { 
+  animation: messageReceive 0.6s ease forwards; 
 }
 
-.message img {
-  max-width: 100%;
-  border-radius: 12px;
-  margin-top: 8px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
+.message img { 
+  max-width: 100%; 
+  border-radius: 12px; 
+  margin-top: 8px; 
+  cursor: pointer; 
+  transition: transform 0.3s ease; 
 }
 
-.message img:hover {
-  transform: scale(1.03);
+.message img:hover { 
+  transform: scale(1.03); 
 }
 
-.message-info {
-  font-size: 0.75em;
-  opacity: 0.7;
-  margin-top: 5px;
-  display: flex;
-  justify-content: space-between;
+.message-info { 
+  font-size: 0.75em; 
+  opacity: 0.7; 
+  margin-top: 5px; 
+  display: flex; 
+  justify-content: space-between; 
 }
 
 /* تأثيرات بصرية للرسائل */
-.message-effect {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border-radius: inherit;
-  opacity: 0;
-  z-index: -1;
+.message-effect { 
+  position: absolute; 
+  width: 100%; 
+  height: 100%; 
+  top: 0; 
+  left: 0; 
+  border-radius: inherit; 
+  opacity: 0; 
+  z-index: -1; 
 }
 
-.message.you .message-effect {
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
-  animation: pulseEffect 0.8s ease-out;
+.message.you .message-effect { 
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.4) 0%, transparent 70%); 
+  animation: pulseEffect 0.8s ease-out; 
 }
 
-.message.other .message-effect {
-  background: radial-gradient(circle at center, rgba(255, 77, 148, 0.3) 0%, transparent 70%);
-  animation: pulseEffect 0.8s ease-out;
+.message.other .message-effect { 
+  background: radial-gradient(circle at center, rgba(255, 77, 148, 0.3) 0%, transparent 70%); 
+  animation: pulseEffect 0.8s ease-out; 
 }
 
 /* منطقة الإرسال */
-#inputContainer {
-  display: flex;
-  padding: 12px 15px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(15px);
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
-  gap: 8px;
-  flex-shrink: 0;
-  margin-top: auto;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+#inputContainer { 
+  display: flex; 
+  padding: 12px 15px; 
+  background: rgba(255, 255, 255, 0.2); 
+  backdrop-filter: blur(15px); 
+  border-top: 1px solid rgba(255, 255, 255, 0.3); 
+  gap: 8px; 
+  flex-shrink: 0; 
+  margin-top: auto; 
+  border-bottom-left-radius: 20px; 
+  border-bottom-right-radius: 20px; 
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1); 
 }
 
-#msgInput {
-  flex: 1;
-  padding: 12px 15px;
-  border-radius: 20px;
-  border: none;
-  outline: none;
-  background: rgba(255, 255, 255, 0.3);
-  font-size: 0.95em;
-  color: var(--text-dark);
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+#msgInput { 
+  flex: 1; 
+  padding: 12px 15px; 
+  border-radius: 20px; 
+  border: none; 
+  outline: none; 
+  background: rgba(255, 255, 255, 0.3); 
+  font-size: 0.95em; 
+  color: var(--text-dark); 
+  transition: all 0.3s ease; 
+  border: 1px solid rgba(255, 255, 255, 0.2); 
 }
 
-#msgInput:focus {
-  background: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 0 10px rgba(255, 77, 148, 0.4);
-  border-color: var(--primary-light);
+#msgInput:focus { 
+  background: rgba(255, 255, 255, 0.4); 
+  box-shadow: 0 0 10px rgba(255, 77, 148, 0.4); 
+  border-color: var(--primary-light); 
 }
 
-#sendBtn, #imgBtn {
-  padding: 12px;
-  border-radius: 50%;
-  border: none;
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: var(--text-light);
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 45px;
-  flex-shrink: 0;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
-  overflow: hidden;
+#sendBtn, #imgBtn { 
+  padding: 12px; 
+  border-radius: 50%; 
+  border: none; 
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+  color: var(--text-light); 
+  font-weight: bold; 
+  cursor: pointer; 
+  transition: all 0.3s ease; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  width: 45px; 
+  height: 45px; 
+  flex-shrink: 0; 
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2); 
+  position: relative; 
+  overflow: hidden; 
 }
 
-#sendBtn::before, #imgBtn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: left 0.5s ease;
+#sendBtn::before, #imgBtn::before { 
+  content: ''; 
+  position: absolute; 
+  top: 0; 
+  left: -100%; 
+  width: 100%; 
+  height: 100%; 
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent); 
+  transition: left 0.5s ease; 
 }
 
-#sendBtn:hover::before, #imgBtn:hover::before {
-  left: 100%;
+#sendBtn:hover::before, #imgBtn:hover::before { 
+  left: 100%; 
 }
 
-#sendBtn:hover, #imgBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 12px rgba(255, 77, 148, 0.5);
+#sendBtn:hover, #imgBtn:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 5px 12px rgba(255, 77, 148, 0.5); 
 }
 
-#sendBtn:active, #imgBtn:active {
-  transform: translateY(0);
+#sendBtn:active, #imgBtn:active { 
+  transform: translateY(0); 
 }
 
 /* تأثيرات عند النقر على الأزرار */
-.button-click {
-  animation: buttonClick 0.6s ease;
+.button-click { 
+  animation: buttonClick 0.3s ease; 
 }
 
-@keyframes buttonClick {
-  0% { transform: scale(1); }
-  50% { transform: scale(0.9); }
-  100% { transform: scale(1); }
+@keyframes buttonClick { 
+  0% { transform: scale(1); } 
+  50% { transform: scale(0.9); } 
+  100% { transform: scale(1); } 
 }
 
 /* نافذة عرض الصورة */
-#imgModal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease;
-  padding: 20px;
+#imgModal { 
+  display: none; 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  background: rgba(0, 0, 0, 0.9); 
+  justify-content: center; 
+  align-items: center; 
+  z-index: 1000; 
+  animation: fadeIn 0.3s ease; 
+  padding: 20px; 
 }
 
-#imgModal img {
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 15px;
-  box-shadow: 0 0 50px rgba(255, 255, 255, 0.2);
-  animation: scaleIn 0.3s ease;
+#imgModal img { 
+  max-width: 100%; 
+  max-height: 100%; 
+  border-radius: 15px; 
+  box-shadow: 0 0 50px rgba(255, 255, 255, 0.2); 
+  animation: scaleIn 0.3s ease; 
 }
 
-#closeModal {
+#closeModal { 
+  position: absolute; 
+  top: 15px; 
+  right: 20px; 
+  font-size: 35px; 
+  color: white; 
+  cursor: pointer; 
+  transition: all 0.3s ease; 
+}
+
+#closeModal:hover { 
+  transform: scale(1.2); 
+  color: var(--primary-light); 
+}
+
+/* زر الحذف والنسخ - التعديل الرئيسي هنا */
+.actions-container {
   position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 35px;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-#closeModal:hover {
-  transform: scale(1.2);
-  color: var(--primary-light);
-}
-
-/* زر الحذف */
-.deletePopup {
-  position: absolute;
-  top: -25px;
-  right: 0;
-  background: var(--danger);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  cursor: pointer;
+  top: -35px;
+  display: flex;
+  gap: 8px;
   opacity: 0;
-  transform: scale(0.5) rotate(-10deg);
+  transform: scale(0.8);
   transition: all 0.3s ease;
   pointer-events: none;
-  white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.deletePopup.show {
+.message.you .actions-container {
+  right: 0;
+}
+
+.message.other .actions-container {
+  left: 0;
+}
+
+.message:hover .actions-container {
   opacity: 1;
-  transform: scale(1) rotate(0deg);
-  pointer-events: auto;
+  transform: scale(1);
+  pointer-events: all;
 }
 
-.deletePopup:hover {
-  background: #d32f2f;
+.action-popup { 
+  background: rgba(255, 255, 255, 0.9); 
+  color: var(--text-dark); 
+  padding: 5px 10px; 
+  border-radius: 12px; 
+  font-size: 12px; 
+  cursor: pointer; 
+  transition: all 0.3s ease; 
+  white-space: nowrap; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); 
+  display: flex; 
+  align-items: center; 
+  gap: 5px; 
+  z-index: 5; 
+}
+
+.delete-popup { 
+  background: var(--danger); 
+  color: white; 
+}
+
+.copy-popup { 
+  background: #4CAF50; 
+  color: white; 
+}
+
+.action-popup:hover { 
+  transform: scale(1.05) translateY(-2px); 
+}
+
+/* إيموجي القلب */
+.heart-reaction { 
+  position: absolute; 
+  bottom: -8px; 
+  font-size: 16px; 
+  cursor: pointer; 
+  opacity: 0; 
+  transform: scale(0); 
+  transition: all 0.3s ease; 
+  z-index: 4; 
+}
+
+.message.you .heart-reaction { 
+  left: -5px; 
+}
+
+.message.other .heart-reaction { 
+  right: -5px; 
+}
+
+.message:hover .heart-reaction { 
+  opacity: 0.7; 
+  transform: scale(1); 
+}
+
+.heart-reaction.active { 
+  opacity: 1 !important; 
+  transform: scale(1.2) !important; 
+  color: #ff4757; 
+  animation: heartBeat 0.5s ease; 
+}
+
+@keyframes heartBeat { 
+  0% { transform: scale(1); } 
+  50% { transform: scale(1.3); } 
+  100% { transform: scale(1.2); } 
+}
+
+/* تأكيد النسخ */
+.copy-confirm { 
+  position: fixed; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  background: rgba(0, 0, 0, 0.8); 
+  color: white; 
+  padding: 10px 20px; 
+  border-radius: 20px; 
+  z-index: 1000; 
+  opacity: 0; 
+  transition: opacity 0.3s; 
+  pointer-events: none; 
+}
+
+.copy-confirm.show { 
+  opacity: 1; 
 }
 
 /* الرسوم المتحركة */
-@keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.9) translateY(20px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+@keyframes fadeInScale { 
+  from { opacity: 0; transform: scale(0.9) translateY(20px); } 
+  to { opacity: 1; transform: scale(1) translateY(0); } 
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+@keyframes fadeIn { 
+  from { opacity: 0; } 
+  to { opacity: 1; } 
 }
 
-@keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
+@keyframes scaleIn { 
+  from { opacity: 0; transform: scale(0.8); } 
+  to { opacity: 1; transform: scale(1); } 
 }
 
-@keyframes messageSlideIn {
-  from { opacity: 0; transform: translateY(15px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+@keyframes messageSlideIn { 
+  from { opacity: 0; transform: translateY(15px) scale(0.95); } 
+  to { opacity: 1; transform: translateY(0) scale(1); } 
 }
 
-@keyframes messageSend {
-  0% { opacity: 0; transform: translateY(20px) scale(0.8) translateX(20px); }
-  70% { transform: translateY(-5px) scale(1.05) translateX(-5px); }
-  100% { opacity: 1; transform: translateY(0) scale(1) translateX(0); }
+@keyframes messageSend { 
+  0% { opacity: 0; transform: translateY(20px) scale(0.8) translateX(20px); } 
+  70% { transform: translateY(-5px) scale(1.05) translateX(-5px); } 
+  100% { opacity: 1; transform: translateY(0) scale(1) translateX(0); } 
 }
 
-@keyframes messageReceive {
-  0% { opacity: 0; transform: translateY(20px) scale(0.8) translateX(-20px); }
-  70% { transform: translateY(-5px) scale(1.05) translateX(5px); }
-  100% { opacity: 1; transform: translateY(0) scale(1) translateX(0); }
+@keyframes messageReceive { 
+  0% { opacity: 0; transform: translateY(20px) scale(0.8) translateX(-20px); } 
+  70% { transform: translateY(-5px) scale(1.05) translateX(5px); } 
+  100% { opacity: 1; transform: translateY(0) scale(1) translateX(0); } 
 }
 
-@keyframes pulseEffect {
-  0% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 0.7; transform: scale(1.2); }
-  100% { opacity: 0; transform: scale(1.5); }
+@keyframes pulseEffect { 
+  0% { opacity: 0; transform: scale(0.5); } 
+  50% { opacity: 0.7; transform: scale(1.2); } 
+  100% { opacity: 0; transform: scale(1.5); } 
 }
 
 /* تأثيرات النص المتلألئة */
-.glowing-text {
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
-  animation: glow 2s infinite alternate;
+.glowing-text { 
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.7); 
+  animation: glow 2s infinite alternate; 
 }
 
-@keyframes glow {
-  from { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); }
-  to { text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); }
+@keyframes glow { 
+  from { text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); } 
+  to { text-shadow: 0 0 15px rgba(255, 255, 255, 0.9); } 
 }
 
 /* تأثيرات الاهتزاز */
-.vibrate {
-  animation: vibrate 0.5s linear;
+.vibrate { 
+  animation: vibrate 0.3s linear; 
 }
 
-@keyframes vibrate {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-2px); }
-  50% { transform: translateX(2px); }
-  75% { transform: translateX(-2px); }
-  100% { transform: translateX(0); }
+@keyframes vibrate { 
+  0% { transform: translateX(0); } 
+  25% { transform: translateX(-2px); } 
+  50% { transform: translateX(2px); } 
+  75% { transform: translateX(-2px); } 
+  100% { transform: translateX(0); } 
 }
 
 /* مؤشر الكتابة */
-.typing-indicator {
-  display: none;
-  align-self: flex-start;
-  background: var(--bg-medium);
-  padding: 8px 12px;
-  border-radius: 18px;
-  margin: 5px 0;
-  font-style: italic;
-  color: var(--text-dark);
-  opacity: 0.7;
-  font-size: 0.9em;
+.typing-indicator { 
+  display: none; 
+  align-self: flex-start; 
+  background: var(--bg-medium); 
+  padding: 8px 12px; 
+  border-radius: 18px; 
+  margin: 5px 0; 
+  font-style: italic; 
+  color: var(--text-dark); 
+  opacity: 0.7; 
+  font-size: 0.9em; 
 }
 
-.typing-dots {
-  display: inline-block;
+.typing-dots { 
+  display: inline-block; 
 }
 
-.typing-dots span {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--primary);
-  margin: 0 2px;
-  animation: typing 1.4s infinite ease-in-out;
+.typing-dots span { 
+  display: inline-block; 
+  width: 6px; 
+  height: 6px; 
+  border-radius: 50%; 
+  background: var(--primary); 
+  margin: 0 2px; 
+  animation: typing 1.4s infinite ease-in-out; 
 }
 
-.typing-dots span:nth-child(2) {
-  animation-delay: 0.2s;
+.typing-dots span:nth-child(2) { 
+  animation-delay: 0.2s; 
 }
 
-.typing-dots span:nth-child(3) {
-  animation-delay: 0.4s;
+.typing-dots span:nth-child(3) { 
+  animation-delay: 0.4s; 
 }
 
-@keyframes typing {
-  0%, 60%, 100% { transform: translateY(0); }
-  30% { transform: translateY(-4px); }
+@keyframes typing { 
+  0%, 60%, 100% { transform: translateY(0); } 
+  30% { transform: translateY(-4px); } 
 }
 
 /* تصميم متجاوب إضافي للهواتف الصغيرة */
-@media (max-width: 480px) {
-  body {
-    padding: 10px;
+@media (max-width: 480px) { 
+  body { padding: 10px; } 
+  
+  #loginContainer { 
+    padding: 25px 20px; 
+    border-radius: 18px; 
+  } 
+  
+  #loginContainer h1 { 
+    font-size: 1.8rem; 
+    margin-bottom: 20px; 
+  } 
+  
+  #chatContainer { 
+    height: calc(100vh - 20px); 
+    border-radius: 18px; 
+  } 
+  
+  #chatHeader { 
+    padding: 12px 15px; 
+    font-size: 1.2em; 
+  } 
+  
+  .user-avatar { 
+    width: 30px; 
+    height: 30px; 
+    font-size: 1em; 
+  } 
+  
+  #chatArea { 
+    padding: 12px; 
+  } 
+  
+  .message { 
+    max-width: 85%; 
+    padding: 10px; 
+    margin: 8px 0; 
+  } 
+  
+  #inputContainer { 
+    padding: 10px 12px; 
+  } 
+  
+  #msgInput { 
+    padding: 10px 12px; 
+  } 
+  
+  #sendBtn, #imgBtn { 
+    width: 40px; 
+    height: 40px; 
+    padding: 10px; 
+  } 
+  
+  #imgModal { 
+    padding: 15px; 
+  } 
+  
+  #closeModal { 
+    top: 10px; 
+    right: 15px; 
+    font-size: 30px; 
+  } 
+  
+  .action-popup { 
+    font-size: 10px; 
+    padding: 4px 8px; 
   }
   
-  #loginContainer {
-    padding: 25px 20px;
-    border-radius: 18px;
-  }
-  
-  #loginContainer h1 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-  }
-  
-  #chatContainer {
-    height: calc(100vh - 20px);
-    border-radius: 18px;
-  }
-  
-  #chatHeader {
-    padding: 12px 15px;
-    font-size: 1.2em;
-  }
-  
-  .user-avatar {
-    width: 30px;
-    height: 30px;
-    font-size: 1em;
-  }
-  
-  #chatArea {
-    padding: 12px;
-  }
-  
-  .message {
-    max-width: 85%;
-    padding: 10px;
-    margin: 8px 0;
-  }
-  
-  #inputContainer {
-    padding: 10px 12px;
-  }
-  
-  #msgInput {
-    padding: 10px 12px;
-  }
-  
-  #sendBtn, #imgBtn {
-    width: 40px;
-    height: 40px;
-    padding: 10px;
-  }
-  
-  #imgModal {
-    padding: 15px;
-  }
-  
-  #closeModal {
-    top: 10px;
-    right: 15px;
-    font-size: 30px;
+  .actions-container {
+    top: -30px;
+    gap: 5px;
   }
 }
 
 /* تعديلات للوضع الأفقي */
-@media (max-height: 500px) {
-  #chatContainer {
-    height: 95vh;
-  }
+@media (max-height: 500px) { 
+  #chatContainer { 
+    height: 95vh; 
+  } 
   
-  .message {
-    margin: 5px 0;
-    padding: 8px 10px;
-  }
+  .message { 
+    margin: 5px 0; 
+    padding: 8px 10px; 
+  } 
   
-  #chatArea {
-    padding: 10px;
-  }
+  #chatArea { 
+    padding: 10px; 
+  } 
   
-  #inputContainer {
-    padding: 8px 10px;
-  }
+  #inputContainer { 
+    padding: 8px 10px; 
+  } 
 }
 
 /* تحسينات إضافية لمنطقة الإرسال */
-.input-container-wrapper {
-  position: relative;
-  flex-shrink: 0;
+.input-container-wrapper { 
+  position: relative; 
+  flex-shrink: 0; 
 }
 
-.input-container-wrapper::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: 0;
-  width: 100%;
-  height: 10px;
-  background: linear-gradient(to top, rgba(255,255,255,0.1), transparent);
-  pointer-events: none;
+.input-container-wrapper::before { 
+  content: ''; 
+  position: absolute; 
+  top: -10px; 
+  left: 0; 
+  width: 100%; 
+  height: 10px; 
+  background: linear-gradient(to top, rgba(255,255,255,0.1), transparent); 
+  pointer-events: none; 
 }
 
 /* مؤشر صوتي */
-.sound-wave {
-  display: none;
-  position: fixed;
-  bottom: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
+.sound-wave { 
+  display: none; 
+  position: fixed; 
+  bottom: 100px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  z-index: 100; 
 }
 
-.sound-bar {
-  display: inline-block;
-  width: 4px;
-  height: 20px;
-  background: var(--primary);
-  margin: 0 2px;
-  animation: soundWave 1.5s ease-in-out infinite;
+.sound-bar { 
+  display: inline-block; 
+  width: 4px; 
+  height: 20px; 
+  background: var(--primary); 
+  margin: 0 2px; 
+  animation: soundWave 1.5s ease-in-out infinite; 
 }
 
-.sound-bar:nth-child(2) { animation-delay: 0.1s; }
-.sound-bar:nth-child(3) { animation-delay: 0.2s; }
-.sound-bar:nth-child(4) { animation-delay: 0.3s; }
-.sound-bar:nth-child(5) { animation-delay: 0.4s; }
+.sound-bar:nth-child(2) { animation-delay: 0.1s; } 
+.sound-bar:nth-child(3) { animation-delay: 0.2s; } 
+.sound-bar:nth-child(4) { animation-delay: 0.3s; } 
+.sound-bar:nth-child(5) { animation-delay: 0.4s; } 
 
-@keyframes soundWave {
-  0%, 100% { transform: scaleY(0.3); }
-  50% { transform: scaleY(1); }
-}
+@keyframes soundWave { 
+  0%, 100% { transform: scaleY(0.3); } 
+  50% { transform: scaleY(1); } 
+} 
 </style>
 </head>
 <body>
@@ -769,9 +858,12 @@ body {
   <div class="sound-bar"></div>
 </div>
 
+<!-- تأكيد النسخ -->
+<div class="copy-confirm" id="copyConfirm">✓ Disalin ke clipboard!</div>
+
 <!-- واجهة تسجيل الدخول -->
 <div id="loginContainer">
-  <h1 class="glowing-text">Hefi chat <i class="fas fa-comments"></i></h1>
+  <h1 class="glowing-text">Chat 3D <i class="fas fa-comments"></i></h1>
   <div class="input-group">
     <i class="fas fa-user"></i>
     <input type="text" id="username" placeholder="Nama Anda">
@@ -832,6 +924,12 @@ body {
 <audio id="receiveEffect" preload="auto">
   <source src="https://assets.mixkit.co/sfx/preview/mixkit-happy-bells-notification-937.mp3" type="audio/mpeg">
 </audio>
+<audio id="copySound" preload="auto">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-software-interface-start-2574.mp3" type="audio/mpeg">
+</audio>
+<audio id="heartSound" preload="auto">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-new-game-notification-253.mp3" type="audio/mpeg">
+</audio>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
@@ -881,16 +979,38 @@ const loginSound = document.getElementById('loginSound');
 const errorSound = document.getElementById('errorSound');
 const sendEffect = document.getElementById('sendEffect');
 const receiveEffect = document.getElementById('receiveEffect');
+const copySound = document.getElementById('copySound');
+const heartSound = document.getElementById('heartSound');
 
 // مؤشر الصوت
 const soundWave = document.getElementById('soundWave');
+const copyConfirm = document.getElementById('copyConfirm');
 
 // تشغيل مؤشر الصوت
-function playSoundWave() {
+function playSoundIndicator() {
   soundWave.style.display = 'block';
   setTimeout(() => {
     soundWave.style.display = 'none';
   }, 1500);
+}
+
+// تأكيد النسخ
+function showCopyConfirmation() {
+  copyConfirm.classList.add('show');
+  setTimeout(() => {
+    copyConfirm.classList.remove('show');
+  }, 2000);
+}
+
+// نسخ النص إلى الحافظة
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    copySound.play();
+    playSoundIndicator();
+    showCopyConfirmation();
+  }).catch(err => {
+    console.error('Gagal menyalin teks: ', err);
+  });
 }
 
 // تهيئة التطبيق
@@ -950,7 +1070,7 @@ async function handleLogin() {
     document.getElementById('loginContainer').style.display = 'none';
     document.getElementById('chatContainer').style.display = 'flex';
     loginSound.play();
-    playSoundWave();
+    playSoundIndicator();
   }, 300);
   
   enableChat();
@@ -958,7 +1078,7 @@ async function handleLogin() {
 
 function showError(message) {
   errorSound.play();
-  playSoundWave();
+  playSoundIndicator();
   alert(message);
 }
 
@@ -1004,7 +1124,9 @@ function enableChat(){
       textDiv.innerHTML = `<span>${msgData.name}</span><span>Gambar</span>`;
       div.appendChild(textDiv);
     } else { 
-      div.innerText = msgData.text; 
+      const messageText = document.createElement('div');
+      messageText.innerText = msgData.text;
+      div.appendChild(messageText);
       
       const textDiv = document.createElement('div');
       textDiv.className = 'message-info';
@@ -1012,27 +1134,64 @@ function enableChat(){
       div.appendChild(textDiv);
     }
 
-    // إضافة زر الحذف للرسائل الخاصة بالمستخدم
-    if(msgData.name===currentUser){
-      const delPopup = document.createElement('div');
-      delPopup.className='deletePopup';
-      delPopup.innerHTML = '<i class="fas fa-trash"></i> Hapus';
-      delPopup.onclick=()=>{ 
-        remove(ref(db,'rooms/'+ROOM_ID+'/messages/'+key)).then(()=>{
-          div.style.opacity = '0';
-          div.style.transform = 'scale(0.8)';
-          setTimeout(() => div.remove(), 300);
-        }); 
+    // إضافة زر النسخ والحذف للرسائل النصية
+    if (!msgData.img) {
+      const actionsContainer = document.createElement('div');
+      actionsContainer.className = 'actions-container';
+      
+      // زر النسخ لجميع الرسائل النصية
+      const copyPopup = document.createElement('div');
+      copyPopup.className = 'action-popup copy-popup';
+      copyPopup.innerHTML = '<i class="far fa-copy"></i> Salin';
+      copyPopup.onclick = (e) => {
+        e.stopPropagation();
+        copyToClipboard(msgData.text);
       };
-      div.appendChild(delPopup);
+      actionsContainer.appendChild(copyPopup);
+      
+      // زر الحذف للرسائل الخاصة بالمستخدم فقط
+      if(msgData.name === currentUser){
+        const delPopup = document.createElement('div');
+        delPopup.className = 'action-popup delete-popup';
+        delPopup.innerHTML = '<i class="fas fa-trash"></i> Hapus';
+        delPopup.onclick = (e) => {
+          e.stopPropagation();
+          remove(ref(db,'rooms/'+ROOM_ID+'/messages/'+key)).then(()=>{
+            div.style.opacity = '0';
+            div.style.transform = 'scale(0.8)';
+            setTimeout(() => div.remove(), 300);
+          }); 
+        };
+        actionsContainer.appendChild(delPopup);
+      }
+      
+      div.appendChild(actionsContainer);
 
       div.addEventListener('click',(e)=>{
         e.stopPropagation();
-        const isVisible = delPopup.classList.contains('show');
-        document.querySelectorAll('.deletePopup').forEach(d=>d.classList.remove('show'));
-        if(!isVisible) delPopup.classList.add('show');
+        const isVisible = actionsContainer.style.opacity === '1';
+        document.querySelectorAll('.actions-container').forEach(d => {
+          d.style.opacity = '0';
+          d.style.pointerEvents = 'none';
+        });
+        if(!isVisible) {
+          actionsContainer.style.opacity = '1';
+          actionsContainer.style.pointerEvents = 'all';
+        }
       });
     }
+
+    // إضافة إيموجي القلب لجميع الرسائل
+    const heartElement = document.createElement('div');
+    heartElement.className = 'heart-reaction';
+    heartElement.innerHTML = '❤️';
+    heartElement.onclick = (e) => {
+      e.stopPropagation();
+      heartSound.play();
+      playSoundIndicator();
+      heartElement.classList.toggle('active');
+    };
+    div.appendChild(heartElement);
 
     chatArea.appendChild(div);
     
@@ -1053,7 +1212,7 @@ function enableChat(){
         recvSound.play();
         receiveEffect.play();
       }
-      playSoundWave();
+      playSoundIndicator();
     }
   }
 
@@ -1164,10 +1323,13 @@ function enableChat(){
     }
   });
 
-  // إخفاء أزرار الحذف عند النقر في أي مكان
+  // إخفاء أزرار الحذف والنسخ عند النقر في أي مكان
   document.addEventListener('click',(e)=>{
-    if(!e.target.classList.contains('message') && !e.target.classList.contains('deletePopup')){
-      document.querySelectorAll('.deletePopup').forEach(d=>d.classList.remove('show'));
+    if(!e.target.classList.contains('message') && !e.target.classList.contains('action-popup')){
+      document.querySelectorAll('.actions-container').forEach(d => {
+        d.style.opacity = '0';
+        d.style.pointerEvents = 'none';
+      });
     }
   });
 }
