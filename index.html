@@ -1134,12 +1134,12 @@ function enableChat(){
       div.appendChild(textDiv);
     }
 
-    // إضافة زر النسخ والحذف للرسائل النصية
+    // إضافة زر النسخ والحذف للرسائل النصية والصور
+    const actionsContainer = document.createElement('div');
+    actionsContainer.className = 'actions-container';
+    
+    // زر النسخ للرسائل النصية فقط
     if (!msgData.img) {
-      const actionsContainer = document.createElement('div');
-      actionsContainer.className = 'actions-container';
-      
-      // زر النسخ لجميع الرسائل النصية
       const copyPopup = document.createElement('div');
       copyPopup.className = 'action-popup copy-popup';
       copyPopup.innerHTML = '<i class="far fa-copy"></i> Salin';
@@ -1148,38 +1148,38 @@ function enableChat(){
         copyToClipboard(msgData.text);
       };
       actionsContainer.appendChild(copyPopup);
-      
-      // زر الحذف للرسائل الخاصة بالمستخدم فقط
-      if(msgData.name === currentUser){
-        const delPopup = document.createElement('div');
-        delPopup.className = 'action-popup delete-popup';
-        delPopup.innerHTML = '<i class="fas fa-trash"></i> Hapus';
-        delPopup.onclick = (e) => {
-          e.stopPropagation();
-          remove(ref(db,'rooms/'+ROOM_ID+'/messages/'+key)).then(()=>{
-            div.style.opacity = '0';
-            div.style.transform = 'scale(0.8)';
-            setTimeout(() => div.remove(), 300);
-          }); 
-        };
-        actionsContainer.appendChild(delPopup);
-      }
-      
-      div.appendChild(actionsContainer);
-
-      div.addEventListener('click',(e)=>{
-        e.stopPropagation();
-        const isVisible = actionsContainer.style.opacity === '1';
-        document.querySelectorAll('.actions-container').forEach(d => {
-          d.style.opacity = '0';
-          d.style.pointerEvents = 'none';
-        });
-        if(!isVisible) {
-          actionsContainer.style.opacity = '1';
-          actionsContainer.style.pointerEvents = 'all';
-        }
-      });
     }
+    
+    // زر الحذف للرسائل الخاصة بالمستخدم فقط (نصية وصور)
+    if(msgData.name === currentUser){
+      const delPopup = document.createElement('div');
+      delPopup.className = 'action-popup delete-popup';
+      delPopup.innerHTML = '<i class="fas fa-trash"></i> Hapus';
+      delPopup.onclick = (e) => {
+        e.stopPropagation();
+        remove(ref(db,'rooms/'+ROOM_ID+'/messages/'+key)).then(()=>{
+          div.style.opacity = '0';
+          div.style.transform = 'scale(0.8)';
+          setTimeout(() => div.remove(), 300);
+        }); 
+      };
+      actionsContainer.appendChild(delPopup);
+    }
+    
+    div.appendChild(actionsContainer);
+
+    div.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      const isVisible = actionsContainer.style.opacity === '1';
+      document.querySelectorAll('.actions-container').forEach(d => {
+        d.style.opacity = '0';
+        d.style.pointerEvents = 'none';
+      });
+      if(!isVisible) {
+        actionsContainer.style.opacity = '1';
+        actionsContainer.style.pointerEvents = 'all';
+      }
+    });
 
     // إضافة إيموجي القلب لجميع الرسائل
     const heartElement = document.createElement('div');
