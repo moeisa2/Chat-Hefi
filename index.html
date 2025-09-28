@@ -599,6 +599,53 @@ body {
   opacity: 1; 
 }
 
+/* مؤشر الكتابة الثابت في الأعلى */
+.typing-indicator-fixed {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--text-light);
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  z-index: 100;
+  box-shadow: var(--shadow);
+  display: none;
+  align-items: center;
+  gap: 10px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.typing-dots { 
+  display: inline-flex;
+  gap: 4px;
+}
+
+.typing-dots span { 
+  display: inline-block; 
+  width: 6px; 
+  height: 6px; 
+  border-radius: 50%; 
+  background: var(--text-light); 
+  animation: typing 1.4s infinite ease-in-out; 
+}
+
+.typing-dots span:nth-child(2) { 
+  animation-delay: 0.2s; 
+}
+
+.typing-dots span:nth-child(3) { 
+  animation-delay: 0.4s; 
+}
+
+@keyframes typing { 
+  0%, 60%, 100% { transform: translateY(0); } 
+  30% { transform: translateY(-4px); } 
+}
+
 /* الرسوم المتحركة */
 @keyframes fadeInScale { 
   from { opacity: 0; transform: scale(0.9) translateY(20px); } 
@@ -662,45 +709,9 @@ body {
   100% { transform: translateX(0); } 
 }
 
-/* مؤشر الكتابة */
+/* مؤشر الكتابة القديم (مخفي) */
 .typing-indicator { 
   display: none; 
-  align-self: flex-start; 
-  background: var(--bg-medium); 
-  padding: 8px 12px; 
-  border-radius: 18px; 
-  margin: 5px 0; 
-  font-style: italic; 
-  color: var(--text-dark); 
-  opacity: 0.7; 
-  font-size: 0.9em; 
-}
-
-.typing-dots { 
-  display: inline-block; 
-}
-
-.typing-dots span { 
-  display: inline-block; 
-  width: 6px; 
-  height: 6px; 
-  border-radius: 50%; 
-  background: var(--primary); 
-  margin: 0 2px; 
-  animation: typing 1.4s infinite ease-in-out; 
-}
-
-.typing-dots span:nth-child(2) { 
-  animation-delay: 0.2s; 
-}
-
-.typing-dots span:nth-child(3) { 
-  animation-delay: 0.4s; 
-}
-
-@keyframes typing { 
-  0%, 60%, 100% { transform: translateY(0); } 
-  30% { transform: translateY(-4px); } 
 }
 
 /* تصميم متجاوب إضافي للهواتف الصغيرة */
@@ -775,6 +786,11 @@ body {
   .actions-container {
     top: -30px;
     gap: 5px;
+  }
+
+  .typing-indicator-fixed {
+    font-size: 0.8em;
+    padding: 8px 16px;
   }
 }
 
@@ -861,6 +877,16 @@ body {
 <!-- تأكيد النسخ -->
 <div class="copy-confirm" id="copyConfirm">✓ Disalin ke clipboard!</div>
 
+<!-- مؤشر الكتابة الثابت في الأعلى -->
+<div class="typing-indicator-fixed" id="typingIndicatorFixed">
+  <span id="typingText">Seseorang sedang mengetik</span>
+  <span class="typing-dots">
+    <span></span>
+    <span></span>
+    <span></span>
+  </span>
+</div>
+
 <!-- واجهة تسجيل الدخول -->
 <div id="loginContainer">
   <h1 class="glowing-text">Hefi chat <i class="fas fa-comments"></i></h1>
@@ -886,9 +912,7 @@ body {
     <div></div>
   </div>
   <div id="chatArea">
-    <div class="typing-indicator" id="typingIndicator">
-      Seseorang sedang mengetik <span class="typing-dots"><span></span><span></span><span></span></span>
-    </div>
+    <!-- تم إزالة مؤشر الكتابة القديم من هنا -->
   </div>
   <div class="input-container-wrapper">
     <div id="inputContainer">
@@ -933,7 +957,7 @@ body {
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import { getDatabase, ref, get, push, onChildAdded, remove, set, onChildRemoved } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+import { getDatabase, ref, get, push, onChildAdded, remove, set, onChildRemoved, onValue } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA4A8Lg5UrmCCBVF2Pzj1UQLLnpjHCCPJs",
@@ -1090,7 +1114,8 @@ function enableChat(){
   const imgModal = document.getElementById('imgModal');
   const modalImg = document.getElementById('modalImg');
   const closeModal = document.getElementById('closeModal');
-  const typingIndicator = document.getElementById('typingIndicator');
+  const typingIndicatorFixed = document.getElementById('typingIndicatorFixed');
+  const typingText = document.getElementById('typingText');
 
   msgInput.disabled=false; 
   sendBtn.disabled=false;
@@ -1231,10 +1256,64 @@ function enableChat(){
     }
   });
 
+  // مؤشر الكتابة المحسن
+  let typingTimer;
+  let isTyping = false;
+
+  msgInput.addEventListener('input', () => {
+    if (!isTyping) {
+      isTyping = true;
+      // إظهار مؤشر الكتابة للآخرين
+      set(typingRef, { [currentUser]: true });
+    }
+    
+    // إعادة تعيين المؤقت
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => {
+      isTyping = false;
+      // إخفاء مؤشر الكتابة
+      set(typingRef, { [currentUser]: false });
+    }, 1000);
+  });
+
+  // الاستماع لمؤشرات الكتابة من المستخدمين الآخرين
+  onValue(typingRef, (snapshot) => {
+    const typingData = snapshot.val();
+    let someoneTyping = false;
+    let typingUsers = [];
+
+    if (typingData) {
+      Object.keys(typingData).forEach(user => {
+        if (user !== currentUser && typingData[user]) {
+          someoneTyping = true;
+          typingUsers.push(user);
+        }
+      });
+    }
+
+    if (someoneTyping) {
+      // إظهار مؤشر الكتابة الثابت
+      if (typingUsers.length === 1) {
+        typingText.textContent = `${typingUsers[0]} sedang mengetik`;
+      } else {
+        typingText.textContent = `Beberapa orang sedang mengetik`;
+      }
+      typingIndicatorFixed.style.display = 'flex';
+    } else {
+      // إخفاء مؤشر الكتابة
+      typingIndicatorFixed.style.display = 'none';
+    }
+  });
+
   // إرسال رسالة
   sendBtn.addEventListener('click',()=>{
     const msg = msgInput.value.trim(); 
     if(!msg) return;
+    
+    // إخفاء مؤشر الكتابة
+    set(typingRef, { [currentUser]: false });
+    isTyping = false;
+    clearTimeout(typingTimer);
     
     // تأثير النقر على الزر
     sendBtn.classList.add('button-click');
@@ -1242,9 +1321,6 @@ function enableChat(){
     
     push(roomRef, {name:currentUser, text:msg, timestamp: Date.now()});
     msgInput.value='';
-    
-    // إخفاء مؤشر الكتابة
-    set(typingRef, { [currentUser]: false });
   });
 
   // رفع صورة
@@ -1271,42 +1347,12 @@ function enableChat(){
   msgInput.addEventListener('keypress',e=>{ 
     if(e.key==='Enter') sendBtn.click(); 
   });
-  
-  // مؤشر الكتابة
-  let typingTimer;
-  msgInput.addEventListener('input', () => {
-    // إظهار مؤشر الكتابة
-    set(typingRef, { [currentUser]: true });
-    
-    // إعادة تعيين المؤقت
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(() => {
-      set(typingRef, { [currentUser]: false });
-    }, 2000);
-  });
 
-  // الاستماع لمؤشرات الكتابة من المستخدمين الآخرين
-  onChildAdded(typingRef, (snap) => {
-    if (snap.key !== currentUser && snap.val()) {
-      typingIndicator.style.display = 'block';
-      chatArea.scrollTop = chatArea.scrollHeight;
-    }
-  });
-  
-  onChildAdded(typingRef, (snap) => {
-    if (snap.key !== currentUser && !snap.val()) {
-      // إخفاء مؤشر الكتابة إذا لم يكن هناك أحد يكتب
-      const typingUsers = [];
-      onChildAdded(typingRef, (childSnap) => {
-        if (childSnap.key !== currentUser && childSnap.val()) {
-          typingUsers.push(childSnap.key);
-        }
-      });
-      
-      if (typingUsers.length === 0) {
-        typingIndicator.style.display = 'none';
-      }
-    }
+  // إخفاء مؤشر الكتابة عند فقدان التركيز
+  msgInput.addEventListener('blur', () => {
+    set(typingRef, { [currentUser]: false });
+    isTyping = false;
+    clearTimeout(typingTimer);
   });
 
   // إغلاق نافذة الصورة
